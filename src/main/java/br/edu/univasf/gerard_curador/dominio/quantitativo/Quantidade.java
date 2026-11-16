@@ -13,16 +13,20 @@ public final class Quantidade {
         this.unidade = unidade;
     }
 
-    public boolean exigirCompatibilidadeCom(Quantidade quant2) {
-
+    public Numero getNumero() {
+        return numero;
     }
 
-    public Quantidade somar(Quantidade quant2) {
-        Numero resultado = numero.somar(quant2.numero);
-
-        if (resultado.ehNegativo()) {
-
+    public void exigirCompatibilidadeCom(Quantidade outra) {
+        if (outra == null || grandeza != outra.grandeza || unidade != outra.unidade
+                || !objeto.pertenceAMesmaFamilia(outra.objeto)) {
+            throw new IllegalArgumentException("Quantidades incompativeis.");
         }
+    }
+
+    public Quantidade somar(Quantidade outra) {
+        exigirCompatibilidadeCom(outra);
+        return new Quantidade(numero.somar(outra.numero), objeto, grandeza, unidade);
     }
 
 
