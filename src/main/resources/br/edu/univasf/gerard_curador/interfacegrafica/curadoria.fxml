@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane styleClass="raiz-curadoria" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="br.edu.univasf.gerard_curador.interfacegrafica.CuradoriaController">
+
+    <!-- TOPO: título e barra de ações principais -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="barra-topo">
+            <padding>
+                <Insets bottom="14.0" left="20.0" right="20.0" top="14.0"/>
+            </padding>
+            <VBox spacing="2.0">
+                <Label styleClass="titulo-app" text="Curador de Histórias Aditivas"/>
+                <Label styleClass="subtitulo-app" text="Curadoria estruturada de situações-problema"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox alignment="CENTER_RIGHT" spacing="8.0">
+                <Button mnemonicParsing="false" onAction="#aoClicarNovaSituacao" styleClass="botao-secundario"
+                        text="Nova situação"/>
+                <Button mnemonicParsing="false" onAction="#aoClicarCarregarExemplos" styleClass="botao-secundario"
+                        text="Carregar exemplos"/>
+                <Button mnemonicParsing="false" onAction="#aoClicarSalvar" styleClass="botao-secundario"
+                        text="Salvar"/>
+                <Button mnemonicParsing="false" onAction="#aoClicarValidar" styleClass="botao-primario"
+                        text="Validar"/>
+                <Button mnemonicParsing="false" onAction="#aoClicarPromover" styleClass="botao-sucesso"
+                        text="Promover…"/>
+                <Button mnemonicParsing="false" onAction="#aoClicarRecusar" styleClass="botao-perigo"
+                        text="Recusar…"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ESQUERDA: lista de situações gravadas -->
+    <left>
+        <VBox minWidth="260.0" prefWidth="310.0" spacing="10.0" styleClass="painel-lateral">
+            <BorderPane.margin>
+                <Insets bottom="12.0" left="16.0" right="8.0" top="14.0"/>
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="14.0" left="14.0" right="14.0" top="14.0"/>
+            </padding>
+            <Label styleClass="titulo-secao" text="Situações gravadas"/>
+            <ListView fx:id="listaSituacoes" styleClass="lista-situacoes" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </left>
+
+    <!-- CENTRO: abas de curadoria -->
+    <center>
+        <TabPane fx:id="abasPrincipais" styleClass="abas-curadoria" tabClosingPolicy="UNAVAILABLE">
+            <BorderPane.margin>
+                <Insets bottom="12.0" left="8.0" right="16.0" top="14.0"/>
+            </BorderPane.margin>
+
+            <!-- ABA 1: Catálogo -->
+            <Tab fx:id="abaCatalogo" text="1 · Catálogo">
+                <ScrollPane fitToWidth="true" styleClass="rolagem-aba">
+                    <VBox spacing="16.0" styleClass="conteudo-aba">
+                        <padding>
+                            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                        </padding>
+
+                        <!-- Identificação e contexto -->
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Identificação e contexto narrativo"/>
+                            <GridPane hgap="12.0" vgap="10.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="110.0" prefWidth="130.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+
+                                <Label styleClass="rotulo-campo" text="ID da situação" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="campoId" promptText="ex.: rosas-01" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                <Label styleClass="rotulo-campo" text="Enunciado curado" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextArea fx:id="campoEnunciado" prefRowCount="3" promptText="Digite o enunciado completo da situação-problema..."
+                                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                <Label styleClass="rotulo-campo" text="Contexto" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <TextField fx:id="campoLocal" promptText="Local (opcional)" HBox.hgrow="ALWAYS"/>
+                                    <TextField fx:id="campoSituacaoContexto" promptText="Situação (ex.: coleção de flores)" HBox.hgrow="ALWAYS"/>
+                                    <TextField fx:id="campoMomento" promptText="Momento (opcional)" HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                            </GridPane>
+                        </VBox>
+
+                        <!-- Participantes -->
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Participantes do catálogo"/>
+                            <TableView fx:id="tabelaParticipantes" minHeight="150.0" prefHeight="180.0">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="colParticipanteId" prefWidth="140.0" text="ID"/>
+                                    <TableColumn fx:id="colParticipanteNome" prefWidth="200.0" text="Nome exibido"/>
+                                    <TableColumn fx:id="colParticipanteChave" prefWidth="160.0" text="Chave visual"/>
+                                </columns>
+                            </TableView>
+                            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <TextField fx:id="campoParticipanteId" prefWidth="140.0" promptText="id (ex.: vovo)"/>
+                                <TextField fx:id="campoParticipanteNome" promptText="nome exibido (ex.: Vovó)" HBox.hgrow="ALWAYS"/>
+                                <TextField fx:id="campoParticipanteChave" prefWidth="170.0" promptText="chave visual (opcional)"/>
+                                <Button mnemonicParsing="false" onAction="#aoAdicionarParticipante" styleClass="botao-primario"
+                                        text="Adicionar"/>
+                                <Button mnemonicParsing="false" onAction="#aoRemoverParticipante" styleClass="botao-perigo"
+                                        text="Remover"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Objetos contados -->
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Objetos contados do catálogo"/>
+                            <TableView fx:id="tabelaObjetos" minHeight="170.0" prefHeight="200.0">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="colObjetoId" prefWidth="120.0" text="ID"/>
+                                    <TableColumn fx:id="colObjetoFamilia" prefWidth="110.0" text="Família"/>
+                                    <TableColumn fx:id="colObjetoCaracteristicas" prefWidth="160.0" text="Características"/>
+                                    <TableColumn fx:id="colObjetoRealizacao" prefWidth="190.0" text="Singular / Plural"/>
+                                    <TableColumn fx:id="colObjetoChave" prefWidth="130.0" text="Chave visual"/>
+                                </columns>
+                            </TableView>
+                            <GridPane hgap="10.0" vgap="10.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+
+                                <TextField fx:id="campoObjetoId" promptText="id (ex.: rosa_branca)" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="campoObjetoFamilia" promptText="família (ex.: rosa)" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                <TextField fx:id="campoObjetoDimensao" promptText="dimensão (ex.: cor)" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                <TextField fx:id="campoObjetoValor" promptText="valor (ex.: branca)" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                                <TextField fx:id="campoObjetoSingular" promptText="singular (ex.: rosa branca)" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="campoObjetoPlural" promptText="plural (ex.: rosas brancas)" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <TextField fx:id="campoObjetoChave" promptText="chave visual (opcional)" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                <HBox alignment="CENTER_RIGHT" spacing="8.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <Button mnemonicParsing="false" onAction="#aoAdicionarObjeto" styleClass="botao-primario"
+                                            text="Adicionar"/>
+                                    <Button mnemonicParsing="false" onAction="#aoRemoverObjeto" styleClass="botao-perigo"
+                                            text="Remover"/>
+                                </HBox>
+                            </GridPane>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ABA 2: Estado inicial -->
+            <Tab fx:id="abaEstadoInicial" text="2 · Estado inicial">
+                <ScrollPane fitToWidth="true" styleClass="rolagem-aba">
+                    <VBox spacing="16.0" styleClass="conteudo-aba">
+                        <padding>
+                            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                        </padding>
+
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Possuidor inicial"/>
+                            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                <Label styleClass="rotulo-campo" text="Participante possuidor:"/>
+                                <ComboBox fx:id="comboPossuidorInicial" prefWidth="320.0" promptText="Selecione um participante do catálogo"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="12.0" styleClass="cartao" VBox.vgrow="ALWAYS">
+                            <Label styleClass="titulo-secao" text="Inventário inicial"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <ComboBox fx:id="comboObjetoInicial" prefWidth="280.0" promptText="Objeto do catálogo" HBox.hgrow="ALWAYS"/>
+                                <Label styleClass="rotulo-campo" text="Quantidade:"/>
+                                <Spinner fx:id="spinnerQuantidadeInicial" editable="true" prefWidth="110.0"/>
+                                <Button mnemonicParsing="false" onAction="#aoAdicionarItemInicial" styleClass="botao-primario"
+                                        text="Adicionar"/>
+                                <Button mnemonicParsing="false" onAction="#aoRemoverItemInicial" styleClass="botao-perigo"
+                                        text="Remover"/>
+                            </HBox>
+                            <TableView fx:id="tabelaItensIniciais" minHeight="220.0" prefHeight="280.0" VBox.vgrow="ALWAYS">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="colInicialObjeto" prefWidth="340.0" text="Objeto contado"/>
+                                    <TableColumn fx:id="colInicialQuantidade" prefWidth="140.0" text="Quantidade"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ABA 3: Transformações -->
+            <Tab fx:id="abaTransformacoes" text="3 · Transformações">
+                <ScrollPane fitToWidth="true" styleClass="rolagem-aba">
+                    <VBox spacing="16.0" styleClass="conteudo-aba">
+                        <padding>
+                            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                        </padding>
+
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Nova transformação narrativa"/>
+                            <GridPane hgap="12.0" vgap="10.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="115.0" prefWidth="130.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                    <ColumnConstraints minWidth="115.0" prefWidth="130.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+
+                                <Label styleClass="rotulo-campo" text="Ordem temporal" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <Spinner fx:id="spinnerOrdemTransformacao" editable="true" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                <Label styleClass="rotulo-campo" text="Rótulo temporal" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                <TextField fx:id="campoRotuloTemporal" promptText="ex.: primeira entrega" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                                <Label styleClass="rotulo-campo" text="Ator" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <ComboBox fx:id="comboAtor" maxWidth="Infinity" promptText="Participante ator" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                <Label styleClass="rotulo-campo" text="Destinatário" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                <ComboBox fx:id="comboDestinatario" maxWidth="Infinity" promptText="Participante destinatário" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                                <Label styleClass="rotulo-campo" text="Ação" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <ComboBox fx:id="comboAcao" maxWidth="Infinity" promptText="Selecione a ação" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                                <Label styleClass="rotulo-campo" text="Objeto" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                <ComboBox fx:id="comboObjetoTransformacao" maxWidth="Infinity" promptText="Objeto do catálogo" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                                <Label styleClass="rotulo-campo" text="Quantidade" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <Spinner fx:id="spinnerQuantidadeTransformacao" editable="true" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                                <HBox alignment="CENTER_RIGHT" spacing="8.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                    <Button mnemonicParsing="false" onAction="#aoAdicionarTransformacao" styleClass="botao-primario"
+                                            text="Adicionar"/>
+                                    <Button mnemonicParsing="false" onAction="#aoRemoverTransformacao" styleClass="botao-perigo"
+                                            text="Remover"/>
+                                </HBox>
+                            </GridPane>
+                        </VBox>
+
+                        <VBox spacing="12.0" styleClass="cartao" VBox.vgrow="ALWAYS">
+                            <Label styleClass="titulo-secao" text="Sequência de transformações (ordenada pela ordem curada)"/>
+                            <TableView fx:id="tabelaTransformacoes" minHeight="220.0" prefHeight="280.0" VBox.vgrow="ALWAYS">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="colTransfOrdem" prefWidth="70.0" text="Ordem"/>
+                                    <TableColumn fx:id="colTransfRotulo" prefWidth="140.0" text="Rótulo"/>
+                                    <TableColumn fx:id="colTransfAtor" prefWidth="110.0" text="Ator"/>
+                                    <TableColumn fx:id="colTransfAcao" prefWidth="140.0" text="Ação"/>
+                                    <TableColumn fx:id="colTransfDestinatario" prefWidth="110.0" text="Destinatário"/>
+                                    <TableColumn fx:id="colTransfObjeto" prefWidth="130.0" text="Objeto"/>
+                                    <TableColumn fx:id="colTransfQuantidade" prefWidth="90.0" text="Qtd."/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ABA 4: Incógnita e estado final -->
+            <Tab fx:id="abaIncognitaEstadoFinal" text="4 · Incógnita e estado final">
+                <ScrollPane fitToWidth="true" styleClass="rolagem-aba">
+                    <VBox spacing="16.0" styleClass="conteudo-aba">
+                        <padding>
+                            <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                        </padding>
+
+                        <VBox spacing="12.0" styleClass="cartao">
+                            <Label styleClass="titulo-secao" text="Incógnita quantitativa"/>
+                            <GridPane hgap="12.0" vgap="10.0">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="140.0" prefWidth="160.0"/>
+                                    <ColumnConstraints hgrow="ALWAYS"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints/>
+                                    <RowConstraints/>
+                                </rowConstraints>
+
+                                <Label styleClass="rotulo-campo" text="Papel desconhecido" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <ComboBox fx:id="comboPapelIncognita" maxWidth="Infinity" promptText="Selecione o papel quantitativo"
+                                          GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                <Label styleClass="rotulo-campo" text="Pergunta da incógnita" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="campoPerguntaIncognita" promptText="ex.: Com quantas rosas vovó ficou?"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </GridPane>
+                        </VBox>
+
+                        <VBox spacing="12.0" styleClass="cartao" VBox.vgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <Label styleClass="titulo-secao" text="Estado final curado (opcional)"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button mnemonicParsing="false" onAction="#aoLimparEstadoFinal" styleClass="botao-secundario"
+                                        text="Limpar estado final"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                <Label styleClass="rotulo-campo" text="Possuidor final:"/>
+                                <ComboBox fx:id="comboPossuidorFinal" prefWidth="320.0" promptText="Selecione um participante do catálogo"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                <ComboBox fx:id="comboObjetoFinal" prefWidth="280.0" promptText="Objeto do catálogo" HBox.hgrow="ALWAYS"/>
+                                <Label styleClass="rotulo-campo" text="Quantidade:"/>
+                                <Spinner fx:id="spinnerQuantidadeFinal" editable="true" prefWidth="110.0"/>
+                                <Button mnemonicParsing="false" onAction="#aoAdicionarItemFinal" styleClass="botao-primario"
+                                        text="Adicionar"/>
+                                <Button mnemonicParsing="false" onAction="#aoRemoverItemFinal" styleClass="botao-perigo"
+                                        text="Remover"/>
+                            </HBox>
+                            <TableView fx:id="tabelaItensFinais" minHeight="190.0" prefHeight="240.0" VBox.vgrow="ALWAYS">
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <columns>
+                                    <TableColumn fx:id="colFinalObjeto" prefWidth="340.0" text="Objeto contado"/>
+                                    <TableColumn fx:id="colFinalQuantidade" prefWidth="140.0" text="Quantidade"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ABA 5: Revisão -->
+            <Tab fx:id="abaRevisao" text="5 · Revisão">
+                <VBox spacing="14.0" styleClass="conteudo-aba">
+                    <padding>
+                        <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                    </padding>
+                    <VBox spacing="6.0" styleClass="cartao">
+                        <Label fx:id="rotuloResumoValidacao" styleClass="resumo-validacao resumo-neutro"
+                               text="0 erros · 0 avisos · Aguardando validação"/>
+                        <Label fx:id="rotuloRevisaoObservacoes" managed="false" styleClass="texto-secundario"
+                               visible="false"/>
+                    </VBox>
+                    <VBox spacing="10.0" styleClass="cartao" VBox.vgrow="ALWAYS">
+                        <Label styleClass="titulo-secao" text="Diagnósticos do domínio"/>
+                        <ListView fx:id="listaDiagnosticos" styleClass="lista-diagnosticos" VBox.vgrow="ALWAYS"/>
+                    </VBox>
+                </VBox>
+            </Tab>
+
+            <!-- ABA 6: Roteiro -->
+            <Tab fx:id="abaRoteiro" text="6 · Roteiro">
+                <VBox spacing="12.0" styleClass="conteudo-aba">
+                    <padding>
+                        <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
+                    </padding>
+                    <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="cartao">
+                        <Label styleClass="titulo-secao" text="Roteiro de quadrinhos projetado"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <ToggleButton fx:id="toggleFormatoRoteiro" mnemonicParsing="false"
+                                      onAction="#aoAlternarFormatoRoteiro" styleClass="botao-secundario"
+                                      text="Alternar para texto"/>
+                    </HBox>
+                    <StackPane styleClass="cartao-roteiro" VBox.vgrow="ALWAYS">
+                        <WebView fx:id="webViewRoteiro"/>
+                        <TextArea fx:id="textAreaRoteiro" editable="false" managed="false"
+                                  styleClass="roteiro-textual" visible="false" wrapText="true"/>
+                    </StackPane>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+
+    <!-- RODAPÉ: barra de status e status de curadoria atual -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="barra-rodape">
+            <padding>
+                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0"/>
+            </padding>
+            <Label fx:id="rotuloStatus" styleClass="rotulo-status"
+                   text="Pronto. Selecione uma situação ou crie uma nova."/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label styleClass="rotulo-status-prefixo" text="Status de curadoria:"/>
+            <Label fx:id="rotuloStatusCuradoria" styleClass="badge-status badge-candidata"
+                   text="candidata nao curada"/>
+        </HBox>
+    </bottom>
+</BorderPane>
