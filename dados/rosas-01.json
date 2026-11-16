@@ -1,0 +1,171 @@
+{
+  "id": "rosas-01",
+  "enunciado": "Vovo possui 2 rosas brancas e 3 rosas amarelas. Deu 1 rosa branca e 1 rosa amarela para a sua netinha. Com quantas rosas vovo ficou?",
+  "categoria": "COMPOSICAO_TRANSFORMACOES",
+  "escopo": "ADITIVO",
+  "participantes": [
+    {
+      "id": "vovo",
+      "nome": "Vovo",
+      "referencia_visual": "vovo"
+    },
+    {
+      "id": "netinha",
+      "nome": "Netinha",
+      "referencia_visual": "netinha"
+    }
+  ],
+  "objetos_contados": [
+    {
+      "id": "rosa_branca",
+      "familia": "rosa",
+      "familia_nome": "rosa",
+      "caracteristicas": {
+        "cor": "branca"
+      },
+      "realizacao_textual": {
+        "singular": "rosa branca",
+        "plural": "rosas brancas",
+        "idioma": "pt-BR"
+      },
+      "referencia_visual": "rosa_branca"
+    },
+    {
+      "id": "rosa_amarela",
+      "familia": "rosa",
+      "familia_nome": "rosa",
+      "caracteristicas": {
+        "cor": "amarela"
+      },
+      "realizacao_textual": {
+        "singular": "rosa amarela",
+        "plural": "rosas amarelas",
+        "idioma": "pt-BR"
+      },
+      "referencia_visual": "rosa_amarela"
+    }
+  ],
+  "contexto": {
+    "situacao": "colecao de flores"
+  },
+  "incognita": {
+    "papel": "ESTADO_FINAL",
+    "pergunta": "Com quantas rosas vovo ficou?",
+    "resolvida": false
+  },
+  "estado_inicial": {
+    "possuidor": "vovo",
+    "ordem_temporal": 1,
+    "rotulo_temporal": "no comeco",
+    "itens": [
+      {
+        "objeto": "rosa_branca",
+        "numero": 2,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      {
+        "objeto": "rosa_amarela",
+        "numero": 3,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "transformacoes": [
+    {
+      "ordem": 2,
+      "marcador": "primeira entrega",
+      "ator": "vovo",
+      "destinatario": "netinha",
+      "acao": {
+        "id": "dar",
+        "verbo": "deu",
+        "participio": "dada",
+        "sentido": "RETIRADA",
+        "exige_destinatario": true,
+        "preposicao_destinatario": "para"
+      },
+      "quantidade": {
+        "objeto": "rosa_branca",
+        "numero": 1,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    },
+    {
+      "ordem": 3,
+      "marcador": "segunda entrega",
+      "ator": "vovo",
+      "destinatario": "netinha",
+      "acao": {
+        "id": "dar",
+        "verbo": "deu",
+        "participio": "dada",
+        "sentido": "RETIRADA",
+        "exige_destinatario": true,
+        "preposicao_destinatario": "para"
+      },
+      "quantidade": {
+        "objeto": "rosa_amarela",
+        "numero": 1,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    }
+  ],
+  "estado_final_curado": {
+    "possuidor": "vovo",
+    "ordem_temporal": 4,
+    "rotulo_temporal": "no fim",
+    "itens": [
+      {
+        "objeto": "rosa_branca",
+        "numero": 1,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      {
+        "objeto": "rosa_amarela",
+        "numero": 2,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "relacao": {
+    "id": "rosas-relacao",
+    "categoria": "COMPOSICAO_TRANSFORMACOES",
+    "papeis": {
+      "ESTADO_INICIAL": {
+        "objeto": "rosa_branca",
+        "numero": 5,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_PRIMEIRA": {
+        "objeto": "rosa_branca",
+        "numero": 1,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_SEGUNDA": {
+        "objeto": "rosa_branca",
+        "numero": 1,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "ESTADO_FINAL": {
+        "objeto": "rosa_branca",
+        "numero": 3,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    },
+    "sentido_primeira": "RETIRADA",
+    "sentido_segunda": "RETIRADA",
+    "sentido_resultante": "ACRESCIMO"
+  },
+  "ambiguidades": [],
+  "status": "CANDIDATA_NAO_CURADA"
+}
