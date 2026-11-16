@@ -336,6 +336,98 @@ public final class RascunhoDeSituacao {
         this.perguntaDaIncognita = origem.perguntaDaIncognita;
     }
 
+    /**
+     * Cria um rascunho preenchido a partir de uma situacao de dominio existente.
+     *
+     * <p>Permite editar uma situacao carregada do repositorio mantendo o modelo de
+     * dominio imutavel: nenhuma regra e recalculada durante a copia.
+     */
+    public static RascunhoDeSituacao aPartirDe(SituacaoProblema situacao) {
+        if (situacao == null) {
+            throw new IllegalArgumentException("situacao nao pode ser nula");
+        }
+        RascunhoDeSituacao rascunho = new RascunhoDeSituacao();
+        rascunho.setId(situacao.getId());
+        rascunho.setEnunciado(situacao.getEnunciado());
+
+        ContextoNarrativo contexto = situacao.getContexto();
+        if (contexto != null) {
+            rascunho.setContexto(
+                    contexto.getLocal(),
+                    contexto.getSituacao(),
+                    contexto.getMomento());
+        }
+
+        CatalogoDaSituacao catalogo = situacao.getCatalogo();
+        if (catalogo != null) {
+            for (ParticipanteNarrativo participante : catalogo.getParticipantes()) {
+                ReferenciaVisualParticipante ref = participante.getReferenciaVisual();
+                String chaveVisual = ref != null && ref.estaDefinida() ? ref.getChave() : null;
+                rascunho.adicionarParticipante(
+                        participante.getId(),
+                        participante.getNomeExibido(),
+                        chaveVisual);
+            }
+            for (ObjetoContado objeto : catalogo.getObjetos()) {
+                Map<String, String> caracteristicas = new LinkedHashMap<>();
+                for (CaracteristicaObjeto carac : objeto.getCaracteristicas()) {
+                    caracteristicas.put(carac.getDimensao(), carac.getValor());
+                }
+                ReferenciaVisual ref = objeto.getReferenciaVisual();
+                String chaveVisual = ref != null && ref.estaDefinida() ? ref.getChave() : null;
+                rascunho.adicionarObjeto(
+                        objeto.getId(),
+                        objeto.getFamilia().getId(),
+                        objeto.getFamilia().getNomeConceitual(),
+                        caracteristicas,
+                        objeto.getRealizacaoTextual().getSingular(),
+                        objeto.getRealizacaoTextual().getPlural(),
+                        chaveVisual);
+            }
+        }
+
+        EstadoDePosse estadoInicial = situacao.getEstadoInicial();
+        if (estadoInicial != null) {
+            rascunho.setPossuidorInicial(estadoInicial.getPossuidor().getId());
+            for (Quantidade item : estadoInicial.getInventario().getItens()) {
+                rascunho.definirItemInicial(item.getObjeto().getId(), item.getValor());
+            }
+        }
+
+        for (TransformacaoNarrativa transformacao : situacao.getTransformacoes()) {
+            AcaoNarrativa acao = transformacao.getAcao();
+            rascunho.adicionarTransformacao(new TransformacaoRascunhada(
+                    transformacao.getOrdem(),
+                    transformacao.getMarcador().getRotulo(),
+                    transformacao.getAtor().getId(),
+                    transformacao.getDestinatario() != null
+                            ? transformacao.getDestinatario().getId() : null,
+                    transformacao.getQuantidade().getObjeto().getId(),
+                    transformacao.getQuantidade().getValor(),
+                    acao.getId(),
+                    acao.getVerbo(),
+                    acao.getParticipio(),
+                    acao.getSentido(),
+                    acao.exigeDestinatario()));
+        }
+
+        EstadoDePosse estadoFinal = situacao.getEstadoFinalCurado();
+        if (estadoFinal != null) {
+            rascunho.setPossuidorFinal(estadoFinal.getPossuidor().getId());
+            for (Quantidade item : estadoFinal.getInventario().getItens()) {
+                rascunho.definirItemFinal(item.getObjeto().getId(), item.getValor());
+            }
+        }
+
+        IncognitaQuantitativa incognita = situacao.getIncognita();
+        if (incognita != null) {
+            rascunho.setIncognita(
+                    incognita.getPapelOriginal(),
+                    incognita.getDescricaoDaPergunta());
+        }
+        return rascunho;
+    }
+
     /** Devolve o rascunho ao estado inicial, sem nada informado. */
     public void limpar() {
         id = "";
