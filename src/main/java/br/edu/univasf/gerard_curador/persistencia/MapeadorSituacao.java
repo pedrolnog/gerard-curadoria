@@ -90,7 +90,8 @@ public final class MapeadorSituacao {
                 mapearRelacaoParaDto(situacao.getRelacaoEstrutural()),
                 mapearAmbiguidadesParaDto(situacao.getAmbiguidades()),
                 situacao.getStatus().name(),
-                situacao.getObservacoesDaRevisao());
+                situacao.getRevisor(),
+                situacao.getMotivoDaRecusa());
     }
 
     /**
@@ -150,7 +151,7 @@ public final class MapeadorSituacao {
         }
 
         SituacaoProblema situacao = construtor.construir();
-        return aplicarStatus(situacao, dto.status(), dto.observacoesRevisao());
+        return aplicarStatus(situacao, dto.status(), dto.revisor(), dto.motivoRecusa());
     }
 
     // ------------------------------------------------------------------
@@ -633,19 +634,22 @@ public final class MapeadorSituacao {
 
     private SituacaoProblema aplicarStatus(SituacaoProblema situacao,
                                            String status,
-                                           String observacoes) {
+                                           String revisorGravado,
+                                           String motivoGravado) {
         if (status == null || status.isBlank()
                 || StatusCuradoria.CANDIDATA_NAO_CURADA.name().equals(status)) {
             return situacao;
         }
-        String revisor = (observacoes == null || observacoes.isBlank())
+        String revisor = (revisorGravado == null || revisorGravado.isBlank())
                 ? "revisor registrado no arquivo"
-                : observacoes;
+                : revisorGravado;
         if (StatusCuradoria.VALIDADA.name().equals(status)) {
             return situacao.promoverParaValidada(revisor);
         }
         if (StatusCuradoria.RECUSADA.name().equals(status)) {
-            return situacao.recusar(revisor, "motivo registrado no arquivo");
+            return situacao.recusar(revisor,
+                    motivoGravado == null || motivoGravado.isBlank()
+                            ? "motivo registrado no arquivo" : motivoGravado);
         }
         throw new ErroDeLeituraJson("status desconhecido: " + status);
     }

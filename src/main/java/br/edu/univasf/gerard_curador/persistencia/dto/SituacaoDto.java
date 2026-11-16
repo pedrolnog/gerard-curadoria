@@ -23,5 +23,6 @@ public record SituacaoDto(
         RelacaoDto relacao,
         List<AmbiguidadeDto> ambiguidades,
         String status,
-        String observacoesRevisao) {
+        String revisor,
+        String motivoRecusa) {
 }

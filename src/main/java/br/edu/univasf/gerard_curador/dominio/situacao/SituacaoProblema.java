@@ -50,7 +50,8 @@ public final class SituacaoProblema {
     private final RelacaoEstrutural relacaoEstrutural;
     private final ContextoNarrativo contexto;
     private final StatusCuradoria status;
-    private final String observacoesDaRevisao;
+    private final String revisor;
+    private final String motivoDaRecusa;
     private final EscopoDaSituacao escopo;
     private final List<AmbiguidadeDeclarada> ambiguidades;
 
@@ -64,7 +65,8 @@ public final class SituacaoProblema {
                              RelacaoEstrutural relacaoEstrutural,
                              ContextoNarrativo contexto,
                              StatusCuradoria status,
-                             String observacoesDaRevisao,
+                             String revisor,
+                             String motivoDaRecusa,
                              EscopoDaSituacao escopo,
                              List<AmbiguidadeDeclarada> ambiguidades) {
         if (id == null || id.isBlank()) {
@@ -98,7 +100,8 @@ public final class SituacaoProblema {
         this.relacaoEstrutural = relacaoEstrutural;
         this.contexto = contexto == null ? ContextoNarrativo.naoInformado() : contexto;
         this.status = status == null ? StatusCuradoria.CANDIDATA_NAO_CURADA : status;
-        this.observacoesDaRevisao = observacoesDaRevisao;
+        this.revisor = revisor;
+        this.motivoDaRecusa = motivoDaRecusa;
     }
 
     public static Construtor construtor(String id, String enunciado) {
@@ -145,8 +148,23 @@ public final class SituacaoProblema {
         return status;
     }
 
+    /** Quem revisou (promoveu ou recusou); nulo enquanto candidata. */
+    public String getRevisor() {
+        return revisor;
+    }
+
+    /** Motivo registrado na recusa; nulo nos demais status. */
+    public String getMotivoDaRecusa() {
+        return motivoDaRecusa;
+    }
+
+    /** Texto de exibicao montado a partir dos dados da revisao (nao e armazenado). */
     public String getObservacoesDaRevisao() {
-        return observacoesDaRevisao;
+        return switch (status) {
+            case VALIDADA -> "revisada por " + revisor;
+            case RECUSADA -> "recusada por " + revisor + ": " + motivoDaRecusa;
+            default -> null;
+        };
     }
 
     // ------------------------------------------------------------------
@@ -450,7 +468,7 @@ public final class SituacaoProblema {
             throw new IllegalStateException(
                     "situacao com ambiguidade pendente nao pode ser promovida: " + id);
         }
-        return comStatus(StatusCuradoria.VALIDADA, "revisada por " + revisor);
+        return comStatus(StatusCuradoria.VALIDADA, revisor, null);
     }
 
     /** Registra a recusa com o motivo; a situacao continua existindo. */
@@ -461,12 +479,12 @@ public final class SituacaoProblema {
         if (motivo == null || motivo.isBlank()) {
             throw new IllegalArgumentException("a recusa exige motivo registrado");
         }
-        return comStatus(StatusCuradoria.RECUSADA, "recusada por " + revisor + ": " + motivo);
+        return comStatus(StatusCuradoria.RECUSADA, revisor, motivo);
     }
 
-    private SituacaoProblema comStatus(StatusCuradoria novoStatus, String observacoes) {
+    private SituacaoProblema comStatus(StatusCuradoria novoStatus, String novoRevisor, String motivo) {
         return new SituacaoProblema(id, enunciado, catalogo, estadoInicial, transformacoes,
-                estadoFinalCurado, incognita, relacaoEstrutural, contexto, novoStatus, observacoes,
+                estadoFinalCurado, incognita, relacaoEstrutural, contexto, novoStatus, novoRevisor, motivo,
                 escopo, ambiguidades);
     }
 
@@ -589,7 +607,7 @@ public final class SituacaoProblema {
         public SituacaoProblema construir() {
             return new SituacaoProblema(id, enunciado, catalogo, estadoInicial, transformacoes,
                     estadoFinalCurado, incognita, relacaoEstrutural, contexto,
-                    StatusCuradoria.CANDIDATA_NAO_CURADA, null, escopo, ambiguidades);
+                    StatusCuradoria.CANDIDATA_NAO_CURADA, null, null, escopo, ambiguidades);
         }
     }
 }
