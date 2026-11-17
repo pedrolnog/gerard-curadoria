@@ -2,18 +2,35 @@
 
 Modelo orientado a objetos para curar situações-problema de estrutura aditiva, validá-las sem correção automática e representá-las como roteiros de quadrinhos.
 
-## Requisitos
+## Baixar e executar (sem compilar)
+
+1. Instale o Java 17 ou mais recente (`java -version` para conferir).
+2. Na página de [Releases](https://github.com/pedrolnog/gerard-curadoria/releases), baixe o `.zip` do seu sistema (Linux, Windows ou macOS) e extraia.
+3. Dentro da pasta extraída, rode:
+
+```
+java -jar curador-historias-aditivas.jar
+```
+
+A tela lê e grava as situações na pasta `dados/`, que vem junto no `.zip`. Rode o comando de dentro da pasta extraída para que ela seja encontrada.
+
+## Compilar a partir do código
+
+### Requisitos
 
 - JDK 17+
 - Maven 3.9+
 
-## Comandos
+### Comandos
 
 ```
 mvn test            # 314 testes automatizados
 mvn exec:java       # demonstração no console
 mvn javafx:run      # interface gráfica
+mvn package         # gera target/curador-historias-aditivas.jar (executável, com JavaFX embutido)
 ```
+
+O `.jar` gerado traz o JavaFX do sistema em que foi compilado. Para gerar o de outro sistema, use `-Djavafx.platform=win`, `-Djavafx.platform=mac` ou `-Djavafx.platform=mac-aarch64`.
 
 ## Estrutura de pacotes
 
