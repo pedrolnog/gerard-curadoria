@@ -1,0 +1,119 @@
+{
+  "id": "figurinhas-lucas-01",
+  "enunciado": "Lucas ganhou 12 figurinhas de seu tio. Ele possui agora 17 figurinhas. Quantas figurinhas ele tinha antes de ganhar as figurinhas do tio?",
+  "categoria": "COMPOSICAO_TRANSFORMACOES",
+  "escopo": "ADITIVO",
+  "participantes": [
+    {
+      "id": "lucas",
+      "nome": "Lucas",
+      "referencia_visual": "lucas"
+    },
+    {
+      "id": "tio",
+      "nome": "Tio",
+      "referencia_visual": "tio"
+    }
+  ],
+  "objetos_contados": [
+    {
+      "id": "figurinha_comum",
+      "familia": "figurinha",
+      "familia_nome": "figurinha",
+      "caracteristicas": {
+        "colecao": "album do tio"
+      },
+      "realizacao_textual": {
+        "singular": "figurinha",
+        "plural": "figurinhas",
+        "idioma": "pt-BR"
+      },
+      "referencia_visual": "figurinha"
+    }
+  ],
+  "contexto": {
+    "situacao": "colecao de figurinhas"
+  },
+  "incognita": {
+    "papel": "ESTADO_INICIAL",
+    "pergunta": "Quantas figurinhas Lucas tinha antes?",
+    "resolvida": false
+  },
+  "estado_inicial": {
+    "possuidor": "lucas",
+    "ordem_temporal": 1,
+    "rotulo_temporal": "antes",
+    "itens": [
+      {
+        "objeto": "figurinha_comum",
+        "numero": 5,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "transformacoes": [
+    {
+      "ordem": 2,
+      "marcador": "quando o tio deu",
+      "ator": "lucas",
+      "destinatario": "tio",
+      "acao": {
+        "id": "ganhar",
+        "verbo": "ganhou",
+        "participio": "ganha",
+        "sentido": "ACRESCIMO",
+        "exige_destinatario": true,
+        "preposicao_destinatario": "de"
+      },
+      "quantidade": {
+        "objeto": "figurinha_comum",
+        "numero": 12,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    }
+  ],
+  "estado_final_curado": {
+    "possuidor": "lucas",
+    "ordem_temporal": 3,
+    "rotulo_temporal": "agora",
+    "itens": [
+      {
+        "objeto": "figurinha_comum",
+        "numero": 17,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "relacao": {
+    "id": "figurinhas-relacao",
+    "categoria": "COMPOSICAO_TRANSFORMACOES",
+    "papeis": {
+      "ESTADO_INICIAL": {
+        "objeto": "figurinha_comum",
+        "numero": 5,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_PRIMEIRA": {
+        "objeto": "figurinha_comum",
+        "numero": 12,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "ESTADO_FINAL": {
+        "objeto": "figurinha_comum",
+        "numero": 17,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    },
+    "sentido_primeira": "ACRESCIMO",
+    "sentido_segunda": "ACRESCIMO",
+    "sentido_resultante": "ACRESCIMO"
+  },
+  "ambiguidades": [],
+  "status": "CANDIDATA_NAO_CURADA"
+}

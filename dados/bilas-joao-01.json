@@ -1,0 +1,151 @@
+{
+  "id": "bilas-joao-01",
+  "enunciado": "Joao jogou duas partidas de bila. Na segunda ele ganhou 12 bolas. Ao final das duas partidas ele tinha ganhado 22. Quantas bilas ele ganhou na primeira partida?",
+  "categoria": "COMPOSICAO_TRANSFORMACOES",
+  "escopo": "ADITIVO",
+  "participantes": [
+    {
+      "id": "joao",
+      "nome": "Joao",
+      "referencia_visual": "joao"
+    },
+    {
+      "id": "adversario",
+      "nome": "Adversario",
+      "referencia_visual": "adversario"
+    }
+  ],
+  "objetos_contados": [
+    {
+      "id": "bila_vidro",
+      "familia": "bila",
+      "familia_nome": "bila",
+      "caracteristicas": {
+        "material": "vidro"
+      },
+      "realizacao_textual": {
+        "singular": "bila",
+        "plural": "bilas",
+        "idioma": "pt-BR"
+      },
+      "referencia_visual": "bila"
+    }
+  ],
+  "contexto": {
+    "situacao": "jogo de bila"
+  },
+  "incognita": {
+    "papel": "TRANSFORMACAO_PRIMEIRA",
+    "pergunta": "Quantas bilas Joao ganhou na primeira partida?",
+    "resolvida": false
+  },
+  "estado_inicial": {
+    "possuidor": "joao",
+    "ordem_temporal": 1,
+    "rotulo_temporal": "antes das partidas",
+    "itens": [
+      {
+        "objeto": "bila_vidro",
+        "numero": 0,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "transformacoes": [
+    {
+      "ordem": 2,
+      "marcador": "primeira partida",
+      "ator": "joao",
+      "destinatario": "adversario",
+      "acao": {
+        "id": "ganhar",
+        "verbo": "ganhou",
+        "participio": "ganha",
+        "sentido": "ACRESCIMO",
+        "exige_destinatario": true,
+        "preposicao_destinatario": "de"
+      },
+      "quantidade": {
+        "objeto": "bila_vidro",
+        "numero": 10,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    },
+    {
+      "ordem": 3,
+      "marcador": "segunda partida",
+      "ator": "joao",
+      "destinatario": "adversario",
+      "acao": {
+        "id": "ganhar",
+        "verbo": "ganhou",
+        "participio": "ganha",
+        "sentido": "ACRESCIMO",
+        "exige_destinatario": true,
+        "preposicao_destinatario": "de"
+      },
+      "quantidade": {
+        "objeto": "bila_vidro",
+        "numero": 12,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    }
+  ],
+  "estado_final_curado": {
+    "possuidor": "joao",
+    "ordem_temporal": 4,
+    "rotulo_temporal": "ao final das duas partidas",
+    "itens": [
+      {
+        "objeto": "bila_vidro",
+        "numero": 22,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    ]
+  },
+  "relacao": {
+    "id": "bilas-relacao",
+    "categoria": "COMPOSICAO_TRANSFORMACOES",
+    "papeis": {
+      "ESTADO_INICIAL": {
+        "objeto": "bila_vidro",
+        "numero": 0,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_PRIMEIRA": {
+        "objeto": "bila_vidro",
+        "numero": 10,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_SEGUNDA": {
+        "objeto": "bila_vidro",
+        "numero": 12,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "TRANSFORMACAO_RESULTANTE": {
+        "objeto": "bila_vidro",
+        "numero": 22,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      },
+      "ESTADO_FINAL": {
+        "objeto": "bila_vidro",
+        "numero": 22,
+        "grandeza": "CONTAGEM",
+        "unidade": "UNIDADE"
+      }
+    },
+    "sentido_primeira": "ACRESCIMO",
+    "sentido_segunda": "ACRESCIMO",
+    "sentido_resultante": "ACRESCIMO"
+  },
+  "ambiguidades": [],
+  "status": "CANDIDATA_NAO_CURADA"
+}

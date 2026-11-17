@@ -1,0 +1,23 @@
+Roteiro: Historia de bilas-joao-01
+Situacao: bilas-joao-01
+
+Quadro 1 - Estado inicial
+  legenda: Joao possui nada
+  cena: personagens: joao | ambientacao: jogo de bila
+  [narracao] Joao possui nada
+
+Quadro 2 - primeira partida
+  legenda: Joao ganhou 10 bilas de Adversario
+  cena: personagens: joao, adversario | elementos: 10x bila
+  [narracao] Joao ganhou 10 bilas de Adversario
+
+Quadro 3 - segunda partida
+  legenda: Joao ganhou 12 bilas de Adversario
+  cena: personagens: joao, adversario | elementos: 12x bila
+  [narracao] Joao ganhou 12 bilas de Adversario
+
+Quadro 4 - Estado final e pergunta
+  legenda: Joao possui 22 bilas
+  cena: personagens: joao | elementos: 22x bila
+  [narracao] Joao possui 22 bilas
+  [pergunta] Quantas bilas Joao ganhou na primeira partida?

@@ -1,0 +1,18 @@
+Roteiro: Historia de figurinhas-lucas-01
+Situacao: figurinhas-lucas-01
+
+Quadro 1 - Estado inicial
+  legenda: Lucas possui 5 figurinhas
+  cena: personagens: lucas | elementos: 5x figurinha | ambientacao: colecao de figurinhas
+  [narracao] Lucas possui 5 figurinhas
+
+Quadro 2 - quando o tio deu
+  legenda: Lucas ganhou 12 figurinhas de Tio
+  cena: personagens: lucas, tio | elementos: 12x figurinha
+  [narracao] Lucas ganhou 12 figurinhas de Tio
+
+Quadro 3 - Estado final e pergunta
+  legenda: Lucas possui 17 figurinhas
+  cena: personagens: lucas | elementos: 17x figurinha
+  [narracao] Lucas possui 17 figurinhas
+  [pergunta] Quantas figurinhas Lucas tinha antes?
