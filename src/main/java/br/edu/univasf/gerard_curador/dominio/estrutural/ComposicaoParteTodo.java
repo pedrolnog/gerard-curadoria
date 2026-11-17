@@ -37,13 +37,16 @@ public final class ComposicaoParteTodo extends RelacaoEstrutural {
      * PapelQuantitativo, comporta uma unica entrada PARTE. Quatro cores de
      * borracha sao quatro partes distintas do mesmo todo.
      */
+    /**
+     * As partes ficam numa lista propria porque o mapa de papeis da superclasse
+     * comporta uma unica quantidade por papel. O todo NAO e duplicado aqui: vive
+     * so no mapa herdado e e lido por {@link #getTodo()}.
+     */
     private final List<Quantidade> partes;
-    private final Quantidade todo;
 
     private ComposicaoParteTodo(String id, List<Quantidade> partes, Quantidade todo) {
         super(id, montarPapeis(partes, todo));
         this.partes = Collections.unmodifiableList(new ArrayList<>(partes));
-        this.todo = todo;
     }
 
     /**
@@ -78,25 +81,25 @@ public final class ComposicaoParteTodo extends RelacaoEstrutural {
     }
 
     public Quantidade getTodo() {
-        return todo;
+        return quantidadeDoPapel(PapelQuantitativo.TODO);
     }
 
     @Override
     protected ResultadoValidacao validarRegrasDaCategoria(ResultadoValidacao resultado) {
         resultado = validarMedidasDasPartes(resultado);
-        if (todo == null || partes.isEmpty()) {
+        if (getTodo() == null || partes.isEmpty()) {
             return resultado;
         }
         int somaDasPartes = 0;
         for (Quantidade parte : partes) {
             somaDasPartes += parte.getValor();
         }
-        if (somaDasPartes != todo.getValor()) {
+        if (somaDasPartes != getTodo().getValor()) {
             resultado = resultado.acrescentar(
                     TipoDiagnostico.ESTADO_CALCULADO_DIVERGENTE,
                     "todo curado",
                     "as partes somam " + somaDasPartes
-                            + ", mas o todo curado declara " + todo.getValor()
+                            + ", mas o todo curado declara " + getTodo().getValor()
                             + "; o valor curado foi preservado");
         }
         return resultado;
@@ -104,7 +107,7 @@ public final class ComposicaoParteTodo extends RelacaoEstrutural {
 
     /** Todas as partes precisam compartilhar grandeza e unidade entre si e com o todo. */
     private ResultadoValidacao validarMedidasDasPartes(ResultadoValidacao resultado) {
-        Quantidade referencia = todo != null ? todo : (partes.isEmpty() ? null : partes.get(0));
+        Quantidade referencia = getTodo() != null ? getTodo() : (partes.isEmpty() ? null : partes.get(0));
         if (referencia == null) {
             return resultado;
         }
@@ -131,14 +134,14 @@ public final class ComposicaoParteTodo extends RelacaoEstrutural {
      *                                    usado para saber se falta exatamente uma.
      */
     public Numero resolverParteAusente(int quantidadeDePartesEsperadas) {
-        if (todo == null || partes.size() != quantidadeDePartesEsperadas - 1) {
+        if (getTodo() == null || partes.size() != quantidadeDePartesEsperadas - 1) {
             return null;
         }
         int somaConhecida = 0;
         for (Quantidade parte : partes) {
             somaConhecida += parte.getValor();
         }
-        return Numero.de(todo.getValor() - somaConhecida);
+        return Numero.de(getTodo().getValor() - somaConhecida);
     }
 
     /** Soma das partes curadas, quando o todo e a incognita. */
