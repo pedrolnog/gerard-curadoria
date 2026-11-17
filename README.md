@@ -10,7 +10,7 @@ Modelo orientado a objetos para curar situações-problema de estrutura aditiva,
 ## Comandos
 
 ```
-mvn test            # 310 testes automatizados
+mvn test            # 314 testes automatizados
 mvn exec:java       # demonstração no console
 mvn javafx:run      # interface gráfica
 ```

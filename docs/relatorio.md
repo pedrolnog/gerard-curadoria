@@ -26,7 +26,7 @@ A retirada de uma quantidade inexistente é recusada por `Inventario`, e não pe
 
 **Herança.** `ViolacaoDeDominioException` (abstrata, estende `IllegalArgumentException`) é a raiz de `QuantidadeIncompativelException` e `RetiradaImpossivelException`. `ComposicaoDeTransformacoes`, `ComposicaoParteTodo` e `ComparacaoQuantitativa` estendem `RelacaoEstrutural`. Na interface gráfica, `CelulaDiagnostico` e `CelulaSituacao` estendem `ListCell`, e `CuradorApplication` estende `Application`.
 
-**Polimorfismo e ligação dinâmica.** `RelacaoEstrutural.validar()` é `final` e implementa o Template Method: aplica a regra comum de medidas e chama o passo abstrato `validarRegrasDaCategoria`. `resolver(Papel)` é abstrato, e a subclasse executada é escolhida em tempo de execução. O enum `SentidoTransformacao` declara `aplicar(...)` abstrato, com um corpo por constante (`ACRESCIMO`, `RETIRADA`). `TransformacaoNarrativa` delega a ele em vez de usar `if`.
+**Polimorfismo e ligação dinâmica.** `RelacaoEstrutural.validar()` é `final` e implementa o Template Method: aplica a regra comum de medidas e chama o passo abstrato `validarRegrasDaCategoria`. `resolver(Papel)` é abstrato, e a subclasse executada é escolhida em tempo de execução. O enum `SentidoTransformacao` declara `aplicar(...)` abstrato, com um corpo por constante (`ACRESCIMO`, `RETIRADA`). `TransformacaoNarrativa` delega a ele em vez de usar `if`. `EpisodioNarrativo` é uma classe abstrata `sealed` com três subclasses (`EpisodioDeEstado`, `EpisodioDeEvento`, `EpisodioDePergunta`): cada uma guarda só o seu dado, e `descrever()` é resolvido por ligação dinâmica, sem campos nulos nem `switch` sobre o tipo.
 
 **Interfaces e "herança múltipla".** Java não tem herança múltipla de classes. O projeto obtém composição de comportamentos por interfaces: `RenderizadorDeRoteiro` (com método `default`, implementado por `RenderizadorTextual` e `RenderizadorHtml`), `Repositorio<T, ID>` genérico (implementado por `RepositorioSituacaoJson`), `Comparable` em `Numero` e `MarcadorTemporal`, e enums que implementam comportamento.
 
@@ -60,7 +60,7 @@ Uma operação aritmética inválida interrompe a execução por exceção (`Qua
 
 ## 7. Testes
 
-Há 310 testes automatizados, todos passando. `CasosDeTesteMinimosTest` contém os 18 casos da seção 11 do enunciado, com os mesmos nomes. `ArquiteturaTest` garante que o domínio não importa `javafx`, `swing`, `awt`, `gson` nem camadas externas. Há ainda testes por classe (por exemplo `QuantidadeTest`). A lógica da tela fica em `RascunhoDeSituacao`, o que a torna testável sem janela.
+Há 314 testes automatizados, todos passando. `CasosDeTesteMinimosTest` contém os 18 casos da seção 11 do enunciado, com os mesmos nomes. `ArquiteturaTest` garante que o domínio não importa `javafx`, `swing`, `awt`, `gson` nem camadas externas. Há ainda testes por classe (por exemplo `QuantidadeTest`). A lógica da tela fica em `RascunhoDeSituacao`, o que a torna testável sem janela.
 
 ## 8. Respostas às perguntas da seção 13
 
@@ -78,6 +78,9 @@ Há 310 testes automatizados, todos passando. `CasosDeTesteMinimosTest` contém 
 12. Todo o domínio, `representacao.quadrinhos` e a persistência. Só `interfacegrafica` depende de JavaFX, e a lógica da tela está em `RascunhoDeSituacao`, independente da janela.
 
 ## 9. Limitações e decisões de escopo
+
+- `ReferenciaVisual` e `ReferenciaVisualParticipante` ficam no domínio como **chaves simbólicas opacas** (texto como `"rosa_branca"`): não carregam imagem nem dependem de biblioteca gráfica. Quem decide o desenho é a camada de representação. Uma evolução possível seria um catálogo visual dentro de `representacao`.
+- `RelacaoDto` reúne os campos das três subclasses de `RelacaoEstrutural`. Uma nova categoria exige uma subclasse no domínio **e** ajuste no mapeador da persistência. O núcleo do domínio não muda, mas a persistência sim. Uma alternativa seria uma hierarquia de DTOs (`sealed interface`) com um mapeamento por categoria.
 
 - Não há extração automática de papéis a partir de texto. O interpretador automático de enunciados do protótipo foi descartado porque a seção 3.2 proíbe essa extração.
 - `RelacaoEstrutural` não implementa as seis categorias completas, conforme a seção 3.2. As três subclasses existentes cobrem as três situações curadas.

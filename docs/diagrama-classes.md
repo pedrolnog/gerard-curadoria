@@ -389,14 +389,28 @@ classDiagram
     }
 
     class EpisodioNarrativo {
-        -TipoEpisodio tipo
+        <<abstract>>
         -MarcadorTemporal momento
-        -EstadoDePosse estado
-        -TransformacaoNarrativa transformacao
-        -IncognitaQuantitativa incognita
         +deEstado(EstadoDePosse estado)$ EpisodioNarrativo
         +deEvento(TransformacaoNarrativa transformacao)$ EpisodioNarrativo
         +dePergunta(IncognitaQuantitativa incognita, MarcadorTemporal m)$ EpisodioNarrativo
+        +getTipo()* TipoEpisodio
+        +descrever()* String
+    }
+
+    class EpisodioDeEstado {
+        -EstadoDePosse estado
+        +getEstado() EstadoDePosse
+    }
+
+    class EpisodioDeEvento {
+        -TransformacaoNarrativa transformacao
+        +getTransformacao() TransformacaoNarrativa
+    }
+
+    class EpisodioDePergunta {
+        -IncognitaQuantitativa incognita
+        +getIncognita() IncognitaQuantitativa
     }
 
     class SequenciaNarrativa {
@@ -441,7 +455,10 @@ classDiagram
     SituacaoProblema ..> SequenciaNarrativa : projeta
 
     SequenciaNarrativa "1" *-- "*" EpisodioNarrativo
-    EpisodioNarrativo "1" o-- "1" TipoEpisodio
+    EpisodioNarrativo <|-- EpisodioDeEstado
+    EpisodioNarrativo <|-- EpisodioDeEvento
+    EpisodioNarrativo <|-- EpisodioDePergunta
+    EpisodioNarrativo ..> TipoEpisodio
 ```
 
 ---
