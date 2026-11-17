@@ -1,0 +1,427 @@
+/* Tema moderno e consistente da tela de curadoria (JavaFX 21) */
+
+.raiz-curadoria {
+    -fx-font-family: "System";
+    -fx-font-size: 13px;
+    -fx-background-color: #f7f8fa;
+    -fx-text-fill: #0f172a;
+}
+
+/* Barra superior */
+.barra-topo {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.titulo-app {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.subtitulo-app {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+/* Painel lateral e cartoes brancos */
+.painel-lateral,
+.cartao,
+.cartao-roteiro {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 12, 0, 0, 2);
+}
+
+.cartao {
+    -fx-padding: 16px;
+}
+
+.cartao-roteiro {
+    -fx-padding: 8px;
+}
+
+.titulo-secao {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.rotulo-campo {
+    -fx-font-weight: bold;
+    -fx-text-fill: #334155;
+}
+
+.texto-secundario {
+    -fx-font-size: 12px;
+    -fx-text-fill: #475569;
+}
+
+/* Botoes */
+.botao-primario {
+    -fx-background-color: #0f766e;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.botao-primario:hover {
+    -fx-background-color: #115e59;
+}
+
+.botao-primario:pressed {
+    -fx-background-color: #134e4a;
+}
+
+.botao-secundario {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #0f172a;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.botao-secundario:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.botao-secundario:selected {
+    -fx-background-color: #f0fdfa;
+    -fx-text-fill: #0f766e;
+    -fx-border-color: #0f766e;
+}
+
+.botao-sucesso {
+    -fx-background-color: #ecfdf5;
+    -fx-text-fill: #0f766e;
+    -fx-font-weight: bold;
+    -fx-border-color: #99f6e4;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.botao-sucesso:hover {
+    -fx-background-color: #ccfbf1;
+}
+
+.botao-perigo {
+    -fx-background-color: #fef2f2;
+    -fx-text-fill: #b91c1c;
+    -fx-font-weight: bold;
+    -fx-border-color: #fecaca;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.botao-perigo:hover {
+    -fx-background-color: #fee2e2;
+}
+
+/* Campos de entrada */
+.text-field,
+.text-area,
+.combo-box,
+.spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.text-field,
+.text-area {
+    -fx-padding: 7 10 7 10;
+}
+
+.text-field:focused,
+.text-area:focused,
+.combo-box:focused,
+.spinner:focused {
+    -fx-border-color: #0f766e;
+}
+
+.text-area .content {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+}
+
+.spinner .text-field {
+    -fx-border-width: 0;
+}
+
+/* Abas */
+.abas-curadoria {
+    -fx-background-color: transparent;
+}
+
+.abas-curadoria .tab-header-area {
+    -fx-padding: 0 4 6 4;
+}
+
+.abas-curadoria .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.abas-curadoria .tab {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 8 8 0 0;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.abas-curadoria .tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #0f766e #e2e8f0 transparent #e2e8f0;
+    -fx-border-width: 2 1 0 1;
+    -fx-border-radius: 8 8 0 0;
+}
+
+.abas-curadoria .tab .tab-label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-font-size: 12.5px;
+}
+
+.abas-curadoria .tab:selected .tab-label {
+    -fx-text-fill: #0f766e;
+}
+
+.abas-curadoria .tab-content-area {
+    -fx-background-color: transparent;
+}
+
+.rolagem-aba {
+    -fx-background-color: transparent;
+    -fx-background: #f7f8fa;
+    -fx-border-color: transparent;
+}
+
+.rolagem-aba > .viewport {
+    -fx-background-color: #f7f8fa;
+}
+
+.conteudo-aba {
+    -fx-background-color: #f7f8fa;
+}
+
+/* Tabelas */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 34px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f1f5f9;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 34px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fafbfc;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #ccfbf1;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #0f172a;
+}
+
+/* Listas laterais e de diagnosticos */
+.lista-situacoes,
+.lista-diagnosticos {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 2px;
+}
+
+.lista-situacoes .list-cell,
+.lista-diagnosticos .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 4 0;
+}
+
+.celula-situacao {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 10 12 10 12;
+}
+
+.lista-situacoes .list-cell:filled:hover .celula-situacao {
+    -fx-background-color: #f1f5f9;
+}
+
+.lista-situacoes .list-cell:filled:selected .celula-situacao {
+    -fx-background-color: #f0fdfa;
+    -fx-border-color: #0f766e;
+    -fx-border-width: 1.5px;
+}
+
+.situacao-id {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+}
+
+.situacao-resumo {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+
+/* Badges de status */
+.badge-status {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 12px;
+}
+
+.badge-candidata {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #b45309;
+}
+
+.badge-validada {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #15803d;
+}
+
+.badge-recusada {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
+}
+
+/* Celulas de diagnostico */
+.celula-diagnostico {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 10 12 10 12;
+}
+
+.etiqueta-diagnostico {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 6px;
+}
+
+.etiqueta-erro {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
+}
+
+.etiqueta-aviso {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #b45309;
+}
+
+.diagnostico-tipo {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+}
+
+.diagnostico-elemento {
+    -fx-font-size: 12px;
+    -fx-text-fill: #475569;
+}
+
+.diagnostico-detalhe {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #1e293b;
+}
+
+/* Resumo de validacao */
+.resumo-validacao {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 8px;
+}
+
+.resumo-neutro {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+}
+
+.resumo-valido {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #15803d;
+}
+
+.resumo-invalido {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
+}
+
+/* Roteiro textual monoespacado */
+.roteiro-textual {
+    -fx-font-family: "JetBrains Mono", "Fira Code", "Consolas", "Monospace";
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #0f172a;
+    -fx-border-width: 0;
+}
+
+/* Rodape */
+.barra-rodape {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.rotulo-status {
+    -fx-text-fill: #334155;
+    -fx-font-size: 12.5px;
+}
+
+.rotulo-status-prefixo {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+}
