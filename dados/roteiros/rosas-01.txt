@@ -1,0 +1,23 @@
+Roteiro: Historia de rosas-01
+Situacao: rosas-01
+
+Quadro 1 - Estado inicial
+  legenda: Vovo possui 2 rosas brancas e 3 rosas amarelas
+  cena: personagens: vovo | elementos: 2x rosa_branca, 3x rosa_amarela | ambientacao: colecao de flores
+  [narracao] Vovo possui 2 rosas brancas e 3 rosas amarelas
+
+Quadro 2 - primeira entrega
+  legenda: Vovo deu 1 rosa branca para Netinha
+  cena: personagens: vovo, netinha | elementos: 1x rosa_branca
+  [narracao] Vovo deu 1 rosa branca para Netinha
+
+Quadro 3 - segunda entrega
+  legenda: Vovo deu 1 rosa amarela para Netinha
+  cena: personagens: vovo, netinha | elementos: 1x rosa_amarela
+  [narracao] Vovo deu 1 rosa amarela para Netinha
+
+Quadro 4 - Estado final e pergunta
+  legenda: Vovo possui 1 rosa branca e 2 rosas amarelas
+  cena: personagens: vovo | elementos: 1x rosa_branca, 2x rosa_amarela
+  [narracao] Vovo possui 1 rosa branca e 2 rosas amarelas
+  [pergunta] Com quantas rosas vovo ficou?
