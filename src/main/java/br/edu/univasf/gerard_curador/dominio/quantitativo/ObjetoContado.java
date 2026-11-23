@@ -8,49 +8,69 @@ import java.util.Set;
 /**
  * Identidade daquilo que e contado: sua familia e suas caracteristicas.
  *
+ * <p>Entidade mutavel por setters validados; o id nao muda (e a identidade
+ * usada em equals/hashCode). O conjunto de caracteristicas e defensivamente
+ * copiado e exposto pelo getter apenas como visao nao modificavel.
+ *
  * <p>Responde a pergunta 1 da apresentacao final. Uma String "rosa branca" nao
  * sabe que pertence a familia rosa, nao sabe que difere de "rosa amarela"
  * apenas na cor, e aceitaria ser somada a "boneca" sem reclamar. ObjetoContado
  * sabe as tres coisas, e por isso e a autoridade sobre a identidade do que se
  * conta.
- *
- * <p>Imutavel, com o conjunto de caracteristicas defensivamente copiado e
- * exposto apenas como visao nao modificavel: um chamador nao consegue acrescentar
- * uma cor a uma rosa ja catalogada.
  */
 public final class ObjetoContado {
 
     private final String id;
-    private final FamiliaObjeto familia;
-    private final Set<CaracteristicaObjeto> caracteristicas;
-    private final RealizacaoTextualObjeto realizacaoTextual;
-    private final ReferenciaVisual referenciaVisual;
+    private FamiliaObjeto familia;
+    private Set<CaracteristicaObjeto> caracteristicas;
+    private RealizacaoTextualObjeto realizacaoTextual;
+    private ReferenciaVisual referenciaVisual;
 
     public ObjetoContado(String id,
                          FamiliaObjeto familia,
                          Set<CaracteristicaObjeto> caracteristicas,
                          RealizacaoTextualObjeto realizacaoTextual,
                          ReferenciaVisual referenciaVisual) {
+        this.id = validarId(id);
+        this.familia = validarFamilia(familia);
+        this.caracteristicas = copiarCaracteristicas(caracteristicas);
+        this.realizacaoTextual = validarRealizacaoTextual(realizacaoTextual);
+        // A referencia visual e opcional: uma situacao pode ser curada antes de
+        // alguem decidir como desenha-la. O dominio nao trava por falta de arte.
+        this.referenciaVisual = normalizarReferenciaVisual(referenciaVisual);
+    }
+
+    private static String validarId(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("objeto contado exige id");
         }
+        return id;
+    }
+
+    private static FamiliaObjeto validarFamilia(FamiliaObjeto familia) {
         if (familia == null) {
             throw new IllegalArgumentException("objeto contado exige familia");
         }
+        return familia;
+    }
+
+    private static RealizacaoTextualObjeto validarRealizacaoTextual(RealizacaoTextualObjeto realizacaoTextual) {
         if (realizacaoTextual == null) {
             throw new IllegalArgumentException("objeto contado exige realizacao textual");
         }
-        this.id = id;
-        this.familia = familia;
-        this.caracteristicas = caracteristicas == null
-                ? Collections.emptySet()
-                : Collections.unmodifiableSet(new LinkedHashSet<>(caracteristicas));
-        this.realizacaoTextual = realizacaoTextual;
-        // A referencia visual e opcional: uma situacao pode ser curada antes de
-        // alguem decidir como desenha-la. O dominio nao trava por falta de arte.
-        this.referenciaVisual = referenciaVisual == null
+        return realizacaoTextual;
+    }
+
+    private static ReferenciaVisual normalizarReferenciaVisual(ReferenciaVisual referenciaVisual) {
+        return referenciaVisual == null
                 ? ReferenciaVisual.naoDefinida()
                 : referenciaVisual;
+    }
+
+    private static Set<CaracteristicaObjeto> copiarCaracteristicas(Set<CaracteristicaObjeto> caracteristicas) {
+        return caracteristicas == null
+                ? new LinkedHashSet<>()
+                : new LinkedHashSet<>(caracteristicas);
     }
 
     public String getId() {
@@ -61,16 +81,64 @@ public final class ObjetoContado {
         return familia;
     }
 
+    /**
+     * Altera a familia do objeto contado.
+     */
+    public void setFamilia(FamiliaObjeto familia) {
+        this.familia = validarFamilia(familia);
+    }
+
     public Set<CaracteristicaObjeto> getCaracteristicas() {
-        return caracteristicas;
+        return Collections.unmodifiableSet(caracteristicas);
+    }
+
+    /**
+     * Altera o conjunto de caracteristicas do objeto contado.
+     */
+    public void setCaracteristicas(Set<CaracteristicaObjeto> caracteristicas) {
+        this.caracteristicas = copiarCaracteristicas(caracteristicas);
+    }
+
+    /**
+     * Adiciona uma caracteristica ao objeto contado.
+     */
+    public void adicionarCaracteristica(CaracteristicaObjeto caracteristica) {
+        if (caracteristica == null) {
+            throw new IllegalArgumentException("caracteristica nao pode ser nula");
+        }
+        this.caracteristicas.add(caracteristica);
+    }
+
+    /**
+     * Remove uma caracteristica do objeto contado.
+     */
+    public void removerCaracteristica(CaracteristicaObjeto caracteristica) {
+        if (caracteristica == null) {
+            throw new IllegalArgumentException("caracteristica nao pode ser nula");
+        }
+        this.caracteristicas.remove(caracteristica);
     }
 
     public RealizacaoTextualObjeto getRealizacaoTextual() {
         return realizacaoTextual;
     }
 
+    /**
+     * Altera a realizacao textual do objeto contado.
+     */
+    public void setRealizacaoTextual(RealizacaoTextualObjeto realizacaoTextual) {
+        this.realizacaoTextual = validarRealizacaoTextual(realizacaoTextual);
+    }
+
     public ReferenciaVisual getReferenciaVisual() {
         return referenciaVisual;
+    }
+
+    /**
+     * Altera a referencia visual do objeto contado.
+     */
+    public void setReferenciaVisual(ReferenciaVisual referenciaVisual) {
+        this.referenciaVisual = normalizarReferenciaVisual(referenciaVisual);
     }
 
     /**

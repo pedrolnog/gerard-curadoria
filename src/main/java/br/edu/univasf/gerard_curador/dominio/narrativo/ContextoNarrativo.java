@@ -5,6 +5,8 @@ import java.util.Objects;
 /**
  * Local, situacao e momento em que a historia acontece.
  *
+ * <p>Entidade mutavel por setters validados.
+ *
  * <p>Representa feira, jogo, colecao, ontem, hoje ou segunda partida sem inferir
  * pelo texto. A especificacao proibe deducao a partir do enunciado: o sistema
  * nao le "foi fazer compras na feira" e conclui que o local e a feira. O curador
@@ -25,9 +27,9 @@ import java.util.Objects;
  */
 public final class ContextoNarrativo {
 
-    private final String local;
-    private final String situacao;
-    private final String momento;
+    private String local;
+    private String situacao;
+    private String momento;
 
     public ContextoNarrativo(String local, String situacao, String momento) {
         this.local = normalizar(local);
@@ -48,12 +50,33 @@ public final class ContextoNarrativo {
         return local;
     }
 
+    /**
+     * Altera o local onde a historia acontece.
+     */
+    public void setLocal(String local) {
+        this.local = normalizar(local);
+    }
+
     public String getSituacao() {
         return situacao;
     }
 
+    /**
+     * Altera a situacao da atividade.
+     */
+    public void setSituacao(String situacao) {
+        this.situacao = normalizar(situacao);
+    }
+
     public String getMomento() {
         return momento;
+    }
+
+    /**
+     * Altera o momento temporal da historia.
+     */
+    public void setMomento(String momento) {
+        this.momento = normalizar(momento);
     }
 
     public boolean possuiLocal() {
