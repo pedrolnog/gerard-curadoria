@@ -125,4 +125,76 @@ class CatalogoDaSituacaoTest {
         assertEquals(SituacoesDeTeste.FAMILIA_ROSA, familias.get(0));
         assertEquals(familiaFigurinha, familias.get(1));
     }
+
+    @Test
+    @DisplayName("adicionarParticipante inclui participante e rejeita nulo ou id duplicado com IllegalArgumentException")
+    void adicionarParticipanteValidacoesEInclusao() {
+        CatalogoDaSituacao catalogo = CatalogoDaSituacao.construtor()
+                .comParticipante(vovo)
+                .construir();
+
+        catalogo.adicionarParticipante(netinha);
+        assertTrue(catalogo.contem(netinha));
+        assertEquals(netinha, catalogo.participantePorId("netinha"));
+
+        assertThrows(IllegalArgumentException.class, () -> catalogo.adicionarParticipante(null));
+
+        ParticipanteNarrativo outraNetinha = new ParticipanteNarrativo("netinha", "Outra Netinha");
+        assertThrows(IllegalArgumentException.class, () -> catalogo.adicionarParticipante(outraNetinha));
+    }
+
+    @Test
+    @DisplayName("removerParticipante exclui participante e rejeita nulo ou ausente com IllegalArgumentException")
+    void removerParticipanteValidacoesEExclusao() {
+        CatalogoDaSituacao catalogo = CatalogoDaSituacao.construtor()
+                .comParticipante(vovo)
+                .comParticipante(netinha)
+                .construir();
+
+        catalogo.removerParticipante(netinha);
+        assertFalse(catalogo.contem(netinha));
+        assertNull(catalogo.participantePorId("netinha"));
+
+        assertThrows(IllegalArgumentException.class, () -> catalogo.removerParticipante(netinha));
+        assertThrows(IllegalArgumentException.class, () -> catalogo.removerParticipante(null));
+    }
+
+    @Test
+    @DisplayName("adicionarObjeto inclui objeto e rejeita nulo ou id duplicado com IllegalArgumentException")
+    void adicionarObjetoValidacoesEInclusao() {
+        CatalogoDaSituacao catalogo = CatalogoDaSituacao.construtor()
+                .comObjeto(branca)
+                .construir();
+
+        catalogo.adicionarObjeto(amarela);
+        assertTrue(catalogo.contem(amarela));
+        assertEquals(amarela, catalogo.objetoPorId("rosa_amarela"));
+
+        assertThrows(IllegalArgumentException.class, () -> catalogo.adicionarObjeto(null));
+
+        ObjetoContado outraAmarela = new ObjetoContado(
+                "rosa_amarela",
+                SituacoesDeTeste.FAMILIA_ROSA,
+                Set.of(),
+                RealizacaoTextualObjeto.emPortugues("outra amarela", "outras amarelas"),
+                null
+        );
+        assertThrows(IllegalArgumentException.class, () -> catalogo.adicionarObjeto(outraAmarela));
+    }
+
+    @Test
+    @DisplayName("removerObjeto exclui objeto e rejeita nulo ou ausente com IllegalArgumentException")
+    void removerObjetoValidacoesEExclusao() {
+        CatalogoDaSituacao catalogo = CatalogoDaSituacao.construtor()
+                .comObjeto(branca)
+                .comObjeto(amarela)
+                .construir();
+
+        catalogo.removerObjeto(amarela);
+        assertFalse(catalogo.contem(amarela));
+        assertNull(catalogo.objetoPorId("rosa_amarela"));
+
+        assertThrows(IllegalArgumentException.class, () -> catalogo.removerObjeto(amarela));
+        assertThrows(IllegalArgumentException.class, () -> catalogo.removerObjeto(null));
+    }
 }

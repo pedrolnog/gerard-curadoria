@@ -272,8 +272,8 @@ class MapeadorSituacaoTest {
     @Test
     @DisplayName("Preserva situação promovida para VALIDADA")
     void preservaSituacaoPromovidaParaValidada() {
-        SituacaoProblema promovida = SituacoesParaPersistencia.situacaoRosasCompleta()
-                .promoverParaValidada("Revisor Humano");
+        SituacaoProblema promovida = SituacoesParaPersistencia.situacaoRosasCompleta();
+        promovida.promoverParaValidada("Revisor Humano");
 
         SituacaoDto dto = mapeador.paraDto(promovida);
         assertEquals(StatusCuradoria.VALIDADA.name(), dto.getStatus());
@@ -286,8 +286,8 @@ class MapeadorSituacaoTest {
     @Test
     @DisplayName("Preserva situação com status RECUSADA")
     void preservaSituacaoRecusada() {
-        SituacaoProblema recusada = SituacoesParaPersistencia.situacaoRosasCompleta()
-                .recusar("Revisor Humano", "Enunciado ambíguo demais");
+        SituacaoProblema recusada = SituacoesParaPersistencia.situacaoRosasCompleta();
+        recusada.recusar("Revisor Humano", "Enunciado ambíguo demais");
 
         SituacaoDto dto = mapeador.paraDto(recusada);
         assertEquals(StatusCuradoria.RECUSADA.name(), dto.getStatus());

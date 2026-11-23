@@ -137,13 +137,13 @@ class RepositorioSituacaoJsonTest {
     @Test
     @DisplayName("Situação promovida para VALIDADA sobrevive à ida e volta com status VALIDADA")
     void situacaoPromovidaParaValidadaVoltaValidada() {
-        SituacaoProblema original = SituacoesParaPersistencia.situacaoRosasCompleta();
-        SituacaoProblema promovida = original.promoverParaValidada("Curador Responsável");
-        assertEquals(StatusCuradoria.VALIDADA, promovida.getStatus());
+        SituacaoProblema situacao = SituacoesParaPersistencia.situacaoRosasCompleta();
+        situacao.promoverParaValidada("Curador Responsável");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
 
-        repositorio.salvar(promovida);
+        repositorio.salvar(situacao);
 
-        SituacaoProblema recarregada = repositorio.buscarPorId(promovida.getId())
+        SituacaoProblema recarregada = repositorio.buscarPorId(situacao.getId())
                 .orElseThrow(() -> new AssertionError("Deveria encontrar a situação promovida"));
 
         assertEquals(StatusCuradoria.VALIDADA, recarregada.getStatus(),

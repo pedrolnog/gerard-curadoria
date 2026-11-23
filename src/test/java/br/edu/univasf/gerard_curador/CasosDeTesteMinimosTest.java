@@ -351,12 +351,12 @@ class CasosDeTesteMinimosTest {
         assertFalse(incognita.estaResolvida());
 
         Quantidade valorResolvido = lucas.getEstadoInicial().getInventario().getItens().get(0);
-        IncognitaQuantitativa resolvida = incognita.resolver(valorResolvido);
+        incognita.resolver(valorResolvido);
 
-        assertTrue(resolvida.estaResolvida());
-        assertEquals(PapelQuantitativo.ESTADO_INICIAL, resolvida.getPapelOriginal());
-        assertTrue(resolvida.designa(PapelQuantitativo.ESTADO_INICIAL));
-        assertEquals(5, resolvida.getValorResolvido().getValor());
+        assertTrue(incognita.estaResolvida());
+        assertEquals(PapelQuantitativo.ESTADO_INICIAL, incognita.getPapelOriginal());
+        assertTrue(incognita.designa(PapelQuantitativo.ESTADO_INICIAL));
+        assertEquals(5, incognita.getValorResolvido().getValor());
     }
 
     @Test

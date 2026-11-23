@@ -1,5 +1,6 @@
 package br.edu.univasf.gerard_curador.dominio.situacao;
 
+import br.edu.univasf.gerard_curador.dominio.narrativo.ContextoNarrativo;
 import br.edu.univasf.gerard_curador.dominio.narrativo.EstadoDePosse;
 import br.edu.univasf.gerard_curador.dominio.narrativo.Inventario;
 import br.edu.univasf.gerard_curador.dominio.narrativo.MarcadorTemporal;
@@ -211,5 +212,107 @@ class SituacaoProblemaTest {
                         .comEstadoInicial(null)
                         .construir(),
                 "No escopo aditivo padrão, estado inicial é obrigatório");
+    }
+
+    @Test
+    @DisplayName("setEnunciado altera o texto e rejeita em branco com IllegalArgumentException preservando anterior")
+    void setEnunciadoAlteraERejeitaEmBranco() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
+
+        situacao.setEnunciado("Novo enunciado curado");
+        assertEquals("Novo enunciado curado", situacao.getEnunciado());
+
+        assertThrows(IllegalArgumentException.class, () -> situacao.setEnunciado(""));
+        assertEquals("Novo enunciado curado", situacao.getEnunciado());
+
+        assertThrows(IllegalArgumentException.class, () -> situacao.setEnunciado("   "));
+        assertEquals("Novo enunciado curado", situacao.getEnunciado());
+
+        assertThrows(IllegalArgumentException.class, () -> situacao.setEnunciado(null));
+        assertEquals("Novo enunciado curado", situacao.getEnunciado());
+    }
+
+    @Test
+    @DisplayName("Alteração de conteúdo após promoção devolve situação para candidata e anula revisor")
+    void alteracaoDeConteudoAposPromocaoDevolveParaCandidata() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
+        situacao.promoverParaValidada("Prof");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
+        assertEquals("Prof", situacao.getRevisor());
+
+        situacao.setEnunciado("Enunciado alterado");
+        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, situacao.getStatus());
+        assertNull(situacao.getRevisor());
+
+        situacao.promoverParaValidada("Prof");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
+        assertEquals("Prof", situacao.getRevisor());
+
+        situacao.setContexto(new ContextoNarrativo("horta", "passado", "ontem"));
+        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, situacao.getStatus());
+        assertNull(situacao.getRevisor());
+
+        situacao.promoverParaValidada("Prof");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
+        assertEquals("Prof", situacao.getRevisor());
+
+        situacao.adicionarAmbiguidade("ontem", "tempo incerto");
+        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, situacao.getStatus());
+        assertNull(situacao.getRevisor());
+    }
+
+    @Test
+    @DisplayName("getTransformacoes devolve lista não modificável e ordenada por ordem temporal")
+    void getTransformacoesNaoModificavelEOrdenadaPorOrdem() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
+        List<TransformacaoNarrativa> transformacoes = situacao.getTransformacoes();
+
+        assertThrows(UnsupportedOperationException.class, () ->
+                transformacoes.add(SituacoesDeTeste.t1DasRosas()));
+
+        assertEquals(2, transformacoes.size());
+        TransformacaoNarrativa primeira = transformacoes.get(0);
+        assertEquals(1, primeira.getOrdem());
+
+        primeira.setMarcador(MarcadorTemporal.de(5, "doação tardia"));
+
+        List<TransformacaoNarrativa> atualizadas = situacao.getTransformacoes();
+        assertEquals(2, atualizadas.size());
+        assertEquals(primeira, atualizadas.get(1));
+        assertEquals(5, atualizadas.get(1).getOrdem());
+    }
+
+    @Test
+    @DisplayName("Escopo fora do aditivo permite estado inicial nulo e retorno ao aditivo sem estado lança exceção")
+    void escopoForaDoAditivoPermiteEstadoInicialNulo() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
+
+        situacao.setEscopo(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO);
+        situacao.setEstadoInicial(null);
+        assertNull(situacao.getEstadoInicial());
+        assertEquals(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO, situacao.getEscopo());
+
+        assertThrows(IllegalArgumentException.class, () -> situacao.setEscopo(EscopoDaSituacao.ADITIVO));
+        assertEquals(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO, situacao.getEscopo());
+    }
+
+    @Test
+    @DisplayName("adicionarAmbiguidade impede promoção e removerAmbiguidade inexistente lança IllegalArgumentException")
+    void ambiguidadeImpedePromocaoEValidacaoDeRemocao() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
+
+        situacao.adicionarAmbiguidade("2 rosas", "não especifica se são do mesmo buquê");
+        assertThrows(IllegalStateException.class, () -> situacao.promoverParaValidada("Prof"));
+
+        AmbiguidadeDeclarada inexistente = new AmbiguidadeDeclarada("trecho", "motivo");
+        assertThrows(IllegalArgumentException.class, () -> situacao.removerAmbiguidade(inexistente));
+        assertThrows(IllegalArgumentException.class, () -> situacao.removerAmbiguidade(null));
+
+        AmbiguidadeDeclarada cadastrada = situacao.getAmbiguidades().get(0);
+        situacao.removerAmbiguidade(cadastrada);
+        assertTrue(situacao.getAmbiguidades().isEmpty());
+
+        situacao.promoverParaValidada("Prof");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
     }
 }
