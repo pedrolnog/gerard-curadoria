@@ -1,9 +1,9 @@
 ### CRC-44: DTOs
 
-* **Tipo:** Data Transfer Objects / Records Imutáveis (Pacote persistencia.dto)
+* **Tipo:** Data Transfer Objects anêmicos com getters e setters (Pacote persistencia.dto)
 * **Responsabilidades:**
   - Desacoplar o modelo de domínio da representação externa serializável em JSON.
-  - Estruturar os dados transitados em records Java imutáveis e anêmicos:
+  - Estruturar os dados transitados em classes anêmicas (construtor vazio para o Gson, getters e setters):
     - `SituacaoDto`: agrega dados gerais, enquadramento, listas e metadados de revisão da situação.
     - `ParticipanteDto`: transporta identificador, nome e chave visual de participantes narrativos.
     - `ObjetoContadoDto`: transporta dados do objeto, sua família, características e textos.

@@ -1,6 +1,6 @@
 ### CRC-30: RealizacaoTextualObjeto
 
-* **Tipo:** Value Object (Imutável)
+* **Tipo:** Entidade simples (getters e setters validados)
 * **Responsabilidades:**
   - Armazenar as flexões no singular e no plural associadas ao nome de um objeto contado, bem como seu idioma.
   - Flexionar a forma gramatical adequada com base na concordância numérica de um `Numero`.

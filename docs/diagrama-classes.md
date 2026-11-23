@@ -293,7 +293,7 @@ classDiagram
         -Quantidade valorResolvido
         +designar(PapelQuantitativo papel, String descricao)$ IncognitaQuantitativa
         +estaResolvida() boolean
-        +resolver(Quantidade valor) IncognitaQuantitativa
+        +resolver(Quantidade valor) void
     }
 
     class TipoDiagnostico {
@@ -438,8 +438,8 @@ classDiagram
         +calcularEstadoFinal() EstadoDePosse
         +calcularPercursoDeEstados() List~EstadoDePosse~
         +projetarSequenciaNarrativa() SequenciaNarrativa
-        +promoverParaValidada(String revisor) SituacaoProblema
-        +recusar(String revisor, String motivo) SituacaoProblema
+        +promoverParaValidada(String revisor) void
+        +recusar(String revisor, String motivo) void
     }
 
     SituacaoProblema "1" *-- "*" TransformacaoNarrativa
@@ -575,7 +575,7 @@ classDiagram
     RepositorioSituacaoJson "1" o-- "1" MapeadorSituacao
     RepositorioSituacaoJson ..> ErroDeLeituraJson : lanca
 
-    note for RepositorioSituacaoJson "Pacote persistencia.dto agrupa os records imutáveis:
+    note for RepositorioSituacaoJson "Pacote persistencia.dto agrupa os DTOs anêmicos (getters e setters):
 - SituacaoDto
 - ParticipanteDto
 - ObjetoContadoDto
