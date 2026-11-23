@@ -37,8 +37,9 @@ public final class CelulaSituacao extends ListCell<SituacaoProblema> {
         rotuloResumo.getStyleClass().add("situacao-resumo");
         rotuloResumo.setWrapText(true);
 
-        cabecalho.getChildren().addAll(rotuloId, espacador, badgeStatus);
-        cartao.getChildren().addAll(cabecalho, rotuloResumo);
+        // O selo vai para baixo do resumo para o id nunca ser cortado na lista.
+        cabecalho.getChildren().addAll(rotuloId, espacador);
+        cartao.getChildren().addAll(cabecalho, rotuloResumo, badgeStatus);
 
         listViewProperty().addListener((obs, antiga, nova) -> {
             if (nova != null) {
@@ -66,6 +67,9 @@ public final class CelulaSituacao extends ListCell<SituacaoProblema> {
         badgeStatus.getStyleClass().removeAll(
                 "badge-candidata", "badge-validada", "badge-recusada");
         badgeStatus.getStyleClass().add(classeCssParaStatus(status));
+        // A faixa colorida do cartao repete o status para leitura rapida da lista.
+        cartao.getStyleClass().removeAll("celula-candidata", "celula-validada", "celula-recusada");
+        cartao.getStyleClass().add(classeCssParaStatus(status).replace("badge-", "celula-"));
 
         setText(null);
         setGraphic(cartao);
