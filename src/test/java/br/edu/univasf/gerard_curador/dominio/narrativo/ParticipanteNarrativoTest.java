@@ -68,4 +68,44 @@ class ParticipanteNarrativoTest {
         assertThrows(IllegalArgumentException.class, () -> new ParticipanteNarrativo("vovo", ""));
         assertThrows(IllegalArgumentException.class, () -> new ParticipanteNarrativo("vovo", "   "));
     }
+
+    @Test
+    @DisplayName("setNomeExibido altera o nome e rejeita valores nulos ou em branco preservando o anterior")
+    void setNomeExibidoAlteraERejeitaInvalido() {
+        ParticipanteNarrativo vovo = new ParticipanteNarrativo("vovo", "Vovó");
+
+        vovo.setNomeExibido("Vovó Maria");
+        assertEquals("Vovó Maria", vovo.getNomeExibido());
+
+        assertThrows(IllegalArgumentException.class, () -> vovo.setNomeExibido(null));
+        assertEquals("Vovó Maria", vovo.getNomeExibido());
+
+        assertThrows(IllegalArgumentException.class, () -> vovo.setNomeExibido("   "));
+        assertEquals("Vovó Maria", vovo.getNomeExibido());
+    }
+
+    @Test
+    @DisplayName("setReferenciaVisual normaliza nulo para referência visual não definida")
+    void setReferenciaVisualNormalizaNulo() {
+        ReferenciaVisualParticipante ref = ReferenciaVisualParticipante.de("avatar_vovo");
+        ParticipanteNarrativo vovo = new ParticipanteNarrativo("vovo", "Vovó", ref);
+
+        assertEquals(ref, vovo.getReferenciaVisual());
+
+        vovo.setReferenciaVisual(null);
+        assertEquals(ReferenciaVisualParticipante.naoDefinida(), vovo.getReferenciaVisual());
+    }
+
+    @Test
+    @DisplayName("Identidade é imutável: dois participantes com mesmo id continuam iguais após mudar o nome de um deles")
+    void igualdadePreservadaAposAlterarNome() {
+        ParticipanteNarrativo vovo1 = new ParticipanteNarrativo("vovo", "Vovó");
+        ParticipanteNarrativo vovo2 = new ParticipanteNarrativo("vovo", "Vovó");
+
+        assertEquals(vovo1, vovo2);
+
+        vovo1.setNomeExibido("Vovó Maria");
+        assertEquals(vovo1, vovo2);
+        assertEquals(vovo1.hashCode(), vovo2.hashCode());
+    }
 }

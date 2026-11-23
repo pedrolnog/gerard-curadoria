@@ -120,14 +120,14 @@ class SituacoesCuradasTest {
 
         // Designação mantida após resolver (caso 13)
         Quantidade valorResolucao = lucas.getEstadoInicial().getInventario().getItens().get(0);
-        IncognitaQuantitativa incognitaResolvida = incognita.resolver(valorResolucao);
+        incognita.resolver(valorResolucao);
 
-        assertTrue(incognitaResolvida.estaResolvida(), "A incógnita deve constar como resolvida");
-        assertTrue(incognitaResolvida.designa(PapelQuantitativo.ESTADO_INICIAL),
+        assertTrue(incognita.estaResolvida(), "A incógnita deve constar como resolvida");
+        assertTrue(incognita.designa(PapelQuantitativo.ESTADO_INICIAL),
                 "A designação do papel deve ser mantida após a resolução");
-        assertEquals(PapelQuantitativo.ESTADO_INICIAL, incognitaResolvida.getPapelOriginal(),
+        assertEquals(PapelQuantitativo.ESTADO_INICIAL, incognita.getPapelOriginal(),
                 "O papel original deve permanecer ESTADO_INICIAL");
-        assertEquals(5, incognitaResolvida.getValorResolvido().getValor());
+        assertEquals(5, incognita.getValorResolvido().getValor());
     }
 
     @Test
@@ -156,7 +156,7 @@ class SituacoesCuradasTest {
     }
 
     @Test
-    @DisplayName("Cada situação projeta sequência narrativa e pode ser promovida a VALIDADA sem alterar a original")
+    @DisplayName("Cada situação projeta sequência narrativa e pode ser promovida a VALIDADA alterando a própria situação")
     void cadaSituacaoProjetaSequenciaNarrativaEPodeSerPromovida() {
         List<SituacaoProblema> situacoes = List.of(
                 SituacoesCuradas.rosas(),
@@ -164,26 +164,20 @@ class SituacoesCuradasTest {
                 SituacoesCuradas.bilasComDuasPartidas()
         );
 
-        for (SituacaoProblema original : situacoes) {
+        for (SituacaoProblema situacao : situacoes) {
             // Cada situação projeta sequência narrativa
-            SequenciaNarrativa sequencia = original.projetarSequenciaNarrativa();
+            SequenciaNarrativa sequencia = situacao.projetarSequenciaNarrativa();
             assertNotNull(sequencia, "A sequência narrativa projetada não deve ser nula");
             assertFalse(sequencia.getEpisodios().isEmpty(),
                     "A sequência narrativa deve conter episódios");
 
-            // Pode ser promovida por um revisor, ficando VALIDADA sem alterar a original
-            SituacaoProblema promovida = original.promoverParaValidada("Revisor Humano");
+            // Pode ser promovida por um revisor, ficando VALIDADA alterando a própria situação
+            situacao.promoverParaValidada("Revisor Humano");
 
-            assertEquals(StatusCuradoria.VALIDADA, promovida.getStatus(),
+            assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus(),
                     "A situação promovida deve possuir status VALIDADA");
-            assertEquals("Revisor Humano", promovida.getRevisor(),
+            assertEquals("Revisor Humano", situacao.getRevisor(),
                     "O revisor deve ser registrado na situação promovida");
-
-            // Original permanece inalterada
-            assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, original.getStatus(),
-                    "A situação original deve continuar CANDIDATA_NAO_CURADA");
-            assertNull(original.getRevisor(),
-                    "A situação original não deve conter revisor");
         }
     }
 }

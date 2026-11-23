@@ -189,11 +189,9 @@ class RascunhoDeSituacaoTest {
                 () -> situacao.promoverParaValidada(""),
                 "promover sem revisor é recusado");
 
-        SituacaoProblema validada = situacao.promoverParaValidada("professor");
-        assertEquals(StatusCuradoria.VALIDADA, validada.getStatus(),
+        situacao.promoverParaValidada("professor");
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus(),
                 "com revisor identificado, fica validada");
-        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, situacao.getStatus(),
-                "a situação original permanece candidata");
     }
 
     @Test

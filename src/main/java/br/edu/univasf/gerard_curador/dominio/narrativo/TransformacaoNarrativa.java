@@ -5,6 +5,8 @@ import br.edu.univasf.gerard_curador.dominio.quantitativo.Quantidade;
 /**
  * Mudanca ordenada entre estados; referencia acao, participantes e quantidade.
  *
+ * <p>Entidade mutavel por setters validados.
+ *
  * <p>Esta e a classe onde "ator, destinatario e objeto sao referencias
  * explicitas" se realiza. Nenhum papel e inferido pela posicao de um campo: o
  * curador aponta objetos concretos, e a transformacao os guarda como referencias,
@@ -30,42 +32,66 @@ import br.edu.univasf.gerard_curador.dominio.quantitativo.Quantidade;
  */
 public final class TransformacaoNarrativa {
 
-    private final ParticipanteNarrativo ator;
-    private final AcaoNarrativa acao;
-    private final ParticipanteNarrativo destinatario;
-    private final Quantidade quantidade;
-    private final MarcadorTemporal marcador;
+    private ParticipanteNarrativo ator;
+    private AcaoNarrativa acao;
+    private ParticipanteNarrativo destinatario;
+    private Quantidade quantidade;
+    private MarcadorTemporal marcador;
 
     public TransformacaoNarrativa(ParticipanteNarrativo ator,
                                   AcaoNarrativa acao,
                                   ParticipanteNarrativo destinatario,
                                   Quantidade quantidade,
                                   MarcadorTemporal marcador) {
+        this.ator = validarAtor(ator);
+        this.acao = validarAcao(acao);
+        validarAcaoEDestinatario(this.acao, destinatario);
+        validarAtorEDestinatario(this.ator, destinatario);
+        this.destinatario = destinatario;
+        this.quantidade = validarQuantidade(quantidade);
+        this.marcador = validarMarcador(marcador);
+    }
+
+    private static ParticipanteNarrativo validarAtor(ParticipanteNarrativo ator) {
         if (ator == null) {
             throw new IllegalArgumentException("transformacao exige ator");
         }
+        return ator;
+    }
+
+    private static AcaoNarrativa validarAcao(AcaoNarrativa acao) {
         if (acao == null) {
             throw new IllegalArgumentException("transformacao exige acao");
         }
+        return acao;
+    }
+
+    private static Quantidade validarQuantidade(Quantidade quantidade) {
         if (quantidade == null) {
             throw new IllegalArgumentException("transformacao exige quantidade");
         }
+        return quantidade;
+    }
+
+    private static MarcadorTemporal validarMarcador(MarcadorTemporal marcador) {
         if (marcador == null) {
             throw new IllegalArgumentException("transformacao exige marcador temporal");
         }
+        return marcador;
+    }
+
+    private static void validarAcaoEDestinatario(AcaoNarrativa acao, ParticipanteNarrativo destinatario) {
         if (acao.exigeDestinatario() && destinatario == null) {
             throw new IllegalArgumentException(
                     "acao " + acao.getId() + " exige destinatario explicito");
         }
+    }
+
+    private static void validarAtorEDestinatario(ParticipanteNarrativo ator, ParticipanteNarrativo destinatario) {
         if (destinatario != null && destinatario.equals(ator)) {
             throw new IllegalArgumentException(
                     "ator e destinatario nao podem ser o mesmo participante: " + ator.getId());
         }
-        this.ator = ator;
-        this.acao = acao;
-        this.destinatario = destinatario;
-        this.quantidade = quantidade;
-        this.marcador = marcador;
     }
 
     /** Transformacao sem contraparte: consumo, perda ou aparecimento. */
@@ -80,20 +106,61 @@ public final class TransformacaoNarrativa {
         return ator;
     }
 
+    /**
+     * Altera o participante que atua na transformacao.
+     */
+    public void setAtor(ParticipanteNarrativo ator) {
+        ParticipanteNarrativo novoAtor = validarAtor(ator);
+        validarAtorEDestinatario(novoAtor, this.destinatario);
+        this.ator = novoAtor;
+    }
+
     public AcaoNarrativa getAcao() {
         return acao;
+    }
+
+    /**
+     * Altera a acao narrativa da transformacao.
+     */
+    public void setAcao(AcaoNarrativa acao) {
+        AcaoNarrativa novaAcao = validarAcao(acao);
+        validarAcaoEDestinatario(novaAcao, this.destinatario);
+        this.acao = novaAcao;
     }
 
     public ParticipanteNarrativo getDestinatario() {
         return destinatario;
     }
 
+    /**
+     * Altera o participante destinatario da transformacao.
+     */
+    public void setDestinatario(ParticipanteNarrativo destinatario) {
+        validarAcaoEDestinatario(this.acao, destinatario);
+        validarAtorEDestinatario(this.ator, destinatario);
+        this.destinatario = destinatario;
+    }
+
     public Quantidade getQuantidade() {
         return quantidade;
     }
 
+    /**
+     * Altera a quantidade transformada.
+     */
+    public void setQuantidade(Quantidade quantidade) {
+        this.quantidade = validarQuantidade(quantidade);
+    }
+
     public MarcadorTemporal getMarcador() {
         return marcador;
+    }
+
+    /**
+     * Altera o marcador temporal da transformacao.
+     */
+    public void setMarcador(MarcadorTemporal marcador) {
+        this.marcador = validarMarcador(marcador);
     }
 
     public int getOrdem() {

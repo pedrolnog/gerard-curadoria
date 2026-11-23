@@ -45,22 +45,16 @@ class StatusCuradoriaTest {
     }
 
     @Test
-    @DisplayName("promoverParaValidada promove situação válida gerando nova instância (imutabilidade)")
-    void promoveSituacaoValidaEPreservaOriginal() {
-        SituacaoProblema original = SituacoesDeTeste.situacaoRosasCompleta();
+    @DisplayName("promoverParaValidada altera o status da própria situação")
+    void promoveSituacaoValidaEAlteraPropriaSituacao() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
 
-        SituacaoProblema promovida = original.promoverParaValidada("Prof. Gerard");
+        situacao.promoverParaValidada("Prof. Gerard");
 
-        assertNotSame(original, promovida);
-        assertEquals(StatusCuradoria.VALIDADA, promovida.getStatus());
-        assertTrue(promovida.getStatus().foiRevisada());
-        assertFalse(promovida.getStatus().aguardaRevisao());
-        assertEquals("revisada por Prof. Gerard", promovida.getObservacoesDaRevisao());
-
-        // A original deve permanecer intacta com status CANDIDATA_NAO_CURADA
-        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, original.getStatus(),
-                "A situação original deve continuar candidata");
-        assertNull(original.getObservacoesDaRevisao());
+        assertEquals(StatusCuradoria.VALIDADA, situacao.getStatus());
+        assertTrue(situacao.getStatus().foiRevisada());
+        assertFalse(situacao.getStatus().aguardaRevisao());
+        assertEquals("revisada por Prof. Gerard", situacao.getObservacoesDaRevisao());
     }
 
     @Test
@@ -92,25 +86,21 @@ class StatusCuradoriaTest {
     }
 
     @Test
-    @DisplayName("recusar exige revisor e motivo e produz nova situação com status RECUSADA")
-    void recusarSituacaoExigeParametrosEAlteraStatusPreservandoOriginal() {
-        SituacaoProblema original = SituacoesDeTeste.situacaoRosasCompleta();
+    @DisplayName("recusar exige revisor e motivo e altera a própria situação para o status RECUSADA")
+    void recusarSituacaoExigeParametrosEAlteraStatusDaPropriaSituacao() {
+        SituacaoProblema situacao = SituacoesDeTeste.situacaoRosasCompleta();
 
-        assertThrows(IllegalArgumentException.class, () -> original.recusar(null, "motivo"));
-        assertThrows(IllegalArgumentException.class, () -> original.recusar("   ", "motivo"));
-        assertThrows(IllegalArgumentException.class, () -> original.recusar("Revisor", null));
-        assertThrows(IllegalArgumentException.class, () -> original.recusar("Revisor", "   "));
+        assertThrows(IllegalArgumentException.class, () -> situacao.recusar(null, "motivo"));
+        assertThrows(IllegalArgumentException.class, () -> situacao.recusar("   ", "motivo"));
+        assertThrows(IllegalArgumentException.class, () -> situacao.recusar("Revisor", null));
+        assertThrows(IllegalArgumentException.class, () -> situacao.recusar("Revisor", "   "));
 
-        SituacaoProblema recusada = original.recusar("Prof. Gerard", "Faltou contextualização");
+        situacao.recusar("Prof. Gerard", "Faltou contextualização");
 
-        assertNotSame(original, recusada);
-        assertEquals(StatusCuradoria.RECUSADA, recusada.getStatus());
-        assertTrue(recusada.getStatus().foiRevisada());
-        assertFalse(recusada.getStatus().aguardaRevisao());
-        assertEquals("recusada por Prof. Gerard: Faltou contextualização", recusada.getObservacoesDaRevisao());
-
-        // A original continua intacta
-        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA, original.getStatus());
+        assertEquals(StatusCuradoria.RECUSADA, situacao.getStatus());
+        assertTrue(situacao.getStatus().foiRevisada());
+        assertFalse(situacao.getStatus().aguardaRevisao());
+        assertEquals("recusada por Prof. Gerard: Faltou contextualização", situacao.getObservacoesDaRevisao());
     }
 
     @Test

@@ -5,6 +5,8 @@ import java.util.Objects;
 /**
  * Formas linguisticas curadas de um objeto contado: singular, plural e idioma.
  *
+ * <p>Entidade mutavel por setters validados.
+ *
  * <p>Existe para manter a gramatica fora do objeto matematico, conforme a
  * fronteira obrigatoria "singular, plural e idioma -> RealizacaoTextualObjeto".
  * Sem ela, Quantidade precisaria decidir entre "1 rosas" e "1 rosa", assumindo
@@ -16,23 +18,35 @@ import java.util.Objects;
  */
 public final class RealizacaoTextualObjeto {
 
-    private final String singular;
-    private final String plural;
-    private final String idioma;
+    private String singular;
+    private String plural;
+    private String idioma;
 
     public RealizacaoTextualObjeto(String singular, String plural, String idioma) {
+        this.singular = validarSingular(singular);
+        this.plural = validarPlural(plural);
+        this.idioma = validarIdioma(idioma);
+    }
+
+    private static String validarSingular(String singular) {
         if (singular == null || singular.isBlank()) {
             throw new IllegalArgumentException("realizacao textual exige singular");
         }
+        return singular;
+    }
+
+    private static String validarPlural(String plural) {
         if (plural == null || plural.isBlank()) {
             throw new IllegalArgumentException("realizacao textual exige plural");
         }
+        return plural;
+    }
+
+    private static String validarIdioma(String idioma) {
         if (idioma == null || idioma.isBlank()) {
             throw new IllegalArgumentException("realizacao textual exige idioma");
         }
-        this.singular = singular;
-        this.plural = plural;
-        this.idioma = idioma;
+        return idioma;
     }
 
     /** Fabrica para o idioma padrao das situacoes curadas na disciplina. */
@@ -44,12 +58,33 @@ public final class RealizacaoTextualObjeto {
         return singular;
     }
 
+    /**
+     * Altera a forma singular.
+     */
+    public void setSingular(String singular) {
+        this.singular = validarSingular(singular);
+    }
+
     public String getPlural() {
         return plural;
     }
 
+    /**
+     * Altera a forma plural.
+     */
+    public void setPlural(String plural) {
+        this.plural = validarPlural(plural);
+    }
+
     public String getIdioma() {
         return idioma;
+    }
+
+    /**
+     * Altera o idioma.
+     */
+    public void setIdioma(String idioma) {
+        this.idioma = validarIdioma(idioma);
     }
 
     /**

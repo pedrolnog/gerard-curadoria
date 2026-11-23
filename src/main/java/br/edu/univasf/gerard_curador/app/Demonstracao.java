@@ -220,9 +220,8 @@ public final class Demonstracao {
         Numero respostaCalculada = comoOAlunoVe.resolver(PapelQuantitativo.ESTADO_INICIAL);
         System.out.println("A relacao resolve o estado inicial como: " + respostaCalculada);
 
-        IncognitaQuantitativa resolvida =
-                situacao.getIncognita().resolver(objetoDeFigurinha().contar(
-                        respostaCalculada.getValor()));
+        IncognitaQuantitativa resolvida = situacao.getIncognita();
+        resolvida.resolver(objetoDeFigurinha().contar(respostaCalculada.getValor()));
         System.out.println("Depois de resolver: " + resolvida.descreverComPapel());
         System.out.println("O papel original permanece consultavel: "
                 + resolvida.getPapelOriginal().getNomeExibido());

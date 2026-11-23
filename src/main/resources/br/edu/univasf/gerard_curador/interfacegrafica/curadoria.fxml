@@ -33,6 +33,7 @@
             <padding>
                 <Insets bottom="14.0" left="20.0" right="20.0" top="14.0"/>
             </padding>
+            <Label styleClass="logo-app" text="+"/>
             <VBox spacing="2.0">
                 <Label styleClass="titulo-app" text="Curador de Histórias Aditivas"/>
                 <Label styleClass="subtitulo-app" text="Curadoria estruturada de situações-problema"/>
@@ -45,6 +46,11 @@
                         text="Carregar exemplos"/>
                 <Button mnemonicParsing="false" onAction="#aoClicarSalvar" styleClass="botao-secundario"
                         text="Salvar"/>
+                <Region styleClass="divisor-topo">
+                    <HBox.margin>
+                        <Insets left="6.0" right="6.0"/>
+                    </HBox.margin>
+                </Region>
                 <Button mnemonicParsing="false" onAction="#aoClicarValidar" styleClass="botao-primario"
                         text="Validar"/>
                 <Button mnemonicParsing="false" onAction="#aoClicarPromover" styleClass="botao-sucesso"
@@ -372,7 +378,7 @@
                         <Insets bottom="18.0" left="18.0" right="18.0" top="18.0"/>
                     </padding>
                     <VBox spacing="6.0" styleClass="cartao">
-                        <Label fx:id="rotuloResumoValidacao" styleClass="resumo-validacao resumo-neutro"
+                        <Label fx:id="rotuloResumoValidacao" maxWidth="Infinity" styleClass="resumo-validacao, resumo-neutro"
                                text="0 erros · 0 avisos · Aguardando validação"/>
                         <Label fx:id="rotuloRevisaoObservacoes" managed="false" styleClass="texto-secundario"
                                visible="false"/>
@@ -417,7 +423,7 @@
                    text="Pronto. Selecione uma situação ou crie uma nova."/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label styleClass="rotulo-status-prefixo" text="Status de curadoria:"/>
-            <Label fx:id="rotuloStatusCuradoria" styleClass="badge-status badge-candidata"
+            <Label fx:id="rotuloStatusCuradoria" styleClass="badge-status, badge-candidata"
                    text="candidata nao curada"/>
         </HBox>
     </bottom>

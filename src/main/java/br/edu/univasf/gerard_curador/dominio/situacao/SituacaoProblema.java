@@ -35,24 +35,26 @@ import java.util.List;
  * inferir papeis a partir do enunciado, ou promover a si mesma ao catalogo
  * validado.
  *
- * <p>Imutavel apos a construcao. O unico "movimento" possivel e a revisao humana,
- * que produz uma nova situacao com outro status.
+ * <p>Entidade mutavel com setters validados e {@code id} fixo. O status de
+ * curadoria so muda por {@link #promoverParaValidada(String)} ou
+ * {@link #recusar(String, String)}; qualquer alteracao de conteudo devolve a
+ * situacao ao status de candidata para que passe por nova revisao humana.
  */
 public final class SituacaoProblema {
 
     private final String id;
-    private final String enunciado;
-    private final CatalogoDaSituacao catalogo;
-    private final EstadoDePosse estadoInicial;
-    private final List<TransformacaoNarrativa> transformacoes;
-    private final EstadoDePosse estadoFinalCurado;
-    private final IncognitaQuantitativa incognita;
-    private final RelacaoEstrutural relacaoEstrutural;
-    private final ContextoNarrativo contexto;
-    private final StatusCuradoria status;
-    private final String revisor;
-    private final String motivoDaRecusa;
-    private final EscopoDaSituacao escopo;
+    private String enunciado;
+    private CatalogoDaSituacao catalogo;
+    private EstadoDePosse estadoInicial;
+    private List<TransformacaoNarrativa> transformacoes;
+    private EstadoDePosse estadoFinalCurado;
+    private IncognitaQuantitativa incognita;
+    private RelacaoEstrutural relacaoEstrutural;
+    private ContextoNarrativo contexto;
+    private StatusCuradoria status;
+    private String revisor;
+    private String motivoDaRecusa;
+    private EscopoDaSituacao escopo;
     private final List<AmbiguidadeDeclarada> ambiguidades;
 
     private SituacaoProblema(String id,
@@ -69,39 +71,60 @@ public final class SituacaoProblema {
                              String motivoDaRecusa,
                              EscopoDaSituacao escopo,
                              List<AmbiguidadeDeclarada> ambiguidades) {
-        if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("situacao exige id");
-        }
-        if (enunciado == null || enunciado.isBlank()) {
-            throw new IllegalArgumentException("situacao exige enunciado curado");
-        }
-        if (catalogo == null) {
-            throw new IllegalArgumentException("situacao exige catalogo de participantes e objetos");
-        }
-        this.escopo = escopo == null ? EscopoDaSituacao.ADITIVO : escopo;
+        validarId(id);
+        validarEnunciado(enunciado);
+        validarCatalogo(catalogo);
+        EscopoDaSituacao escopoNormalizado = normalizarEscopo(escopo);
         // Situacao fora do escopo nao e forcada ao modelo aditivo: nao exige estado inicial.
-        if (estadoInicial == null && this.escopo.permiteModeloAditivo()) {
-            throw new IllegalArgumentException("situacao exige estado inicial");
-        }
+        validarEstadoInicial(estadoInicial, escopoNormalizado);
+        this.escopo = escopoNormalizado;
         this.ambiguidades = ambiguidades == null
-                ? List.of() : Collections.unmodifiableList(new ArrayList<>(ambiguidades));
+                ? new ArrayList<>() : new ArrayList<>(ambiguidades);
         this.id = id;
         this.enunciado = enunciado;
         this.catalogo = catalogo;
         this.estadoInicial = estadoInicial;
-        // Ordenacao pela ordem curada, nao pela ordem de insercao na lista:
-        // a ordem temporal vem do dado, nao da posicao na tela nem no arquivo.
-        List<TransformacaoNarrativa> ordenadas =
-                new ArrayList<>(transformacoes == null ? new ArrayList<>() : transformacoes);
-        ordenadas.sort((a, b) -> Integer.compare(a.getOrdem(), b.getOrdem()));
-        this.transformacoes = Collections.unmodifiableList(ordenadas);
+        this.transformacoes = transformacoes == null
+                ? new ArrayList<>() : new ArrayList<>(transformacoes);
         this.estadoFinalCurado = estadoFinalCurado;
         this.incognita = incognita;
         this.relacaoEstrutural = relacaoEstrutural;
-        this.contexto = contexto == null ? ContextoNarrativo.naoInformado() : contexto;
+        this.contexto = normalizarContexto(contexto);
         this.status = status == null ? StatusCuradoria.CANDIDATA_NAO_CURADA : status;
         this.revisor = revisor;
         this.motivoDaRecusa = motivoDaRecusa;
+    }
+
+    private static void validarId(String id) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("situacao exige id");
+        }
+    }
+
+    private static void validarEnunciado(String enunciado) {
+        if (enunciado == null || enunciado.isBlank()) {
+            throw new IllegalArgumentException("situacao exige enunciado curado");
+        }
+    }
+
+    private static void validarCatalogo(CatalogoDaSituacao catalogo) {
+        if (catalogo == null) {
+            throw new IllegalArgumentException("situacao exige catalogo de participantes e objetos");
+        }
+    }
+
+    private static void validarEstadoInicial(EstadoDePosse estadoInicial, EscopoDaSituacao escopo) {
+        if (estadoInicial == null && escopo.permiteModeloAditivo()) {
+            throw new IllegalArgumentException("situacao exige estado inicial");
+        }
+    }
+
+    private static EscopoDaSituacao normalizarEscopo(EscopoDaSituacao escopo) {
+        return escopo == null ? EscopoDaSituacao.ADITIVO : escopo;
+    }
+
+    private static ContextoNarrativo normalizarContexto(ContextoNarrativo contexto) {
+        return contexto == null ? ContextoNarrativo.naoInformado() : contexto;
     }
 
     public static Construtor construtor(String id, String enunciado) {
@@ -116,32 +139,104 @@ public final class SituacaoProblema {
         return enunciado;
     }
 
+    /** Atualiza o enunciado curado e devolve a situacao para candidata. */
+    public void setEnunciado(String enunciado) {
+        validarEnunciado(enunciado);
+        this.enunciado = enunciado;
+        voltarParaCandidata();
+    }
+
     public CatalogoDaSituacao getCatalogo() {
         return catalogo;
+    }
+
+    /** Atualiza o catalogo da situacao e a devolve para candidata. */
+    public void setCatalogo(CatalogoDaSituacao catalogo) {
+        validarCatalogo(catalogo);
+        this.catalogo = catalogo;
+        voltarParaCandidata();
     }
 
     public EstadoDePosse getEstadoInicial() {
         return estadoInicial;
     }
 
+    /** Atualiza o estado inicial conforme o escopo atual e devolve a situacao para candidata. */
+    public void setEstadoInicial(EstadoDePosse estadoInicial) {
+        validarEstadoInicial(estadoInicial, this.escopo);
+        this.estadoInicial = estadoInicial;
+        voltarParaCandidata();
+    }
+
+    /** Devolve visao nao modificavel das transformacoes ordenadas por ordem temporal. */
     public List<TransformacaoNarrativa> getTransformacoes() {
-        return new ArrayList<>(transformacoes);
+        List<TransformacaoNarrativa> ordenadas = new ArrayList<>(transformacoes);
+        ordenadas.sort((a, b) -> Integer.compare(a.getOrdem(), b.getOrdem()));
+        return Collections.unmodifiableList(ordenadas);
+    }
+
+    /** Substitui a lista de transformacoes com copia defensiva e devolve a situacao para candidata. */
+    public void setTransformacoes(List<TransformacaoNarrativa> transformacoes) {
+        this.transformacoes = transformacoes == null
+                ? new ArrayList<>() : new ArrayList<>(transformacoes);
+        voltarParaCandidata();
+    }
+
+    /** Adiciona uma transformacao a situacao e a devolve para candidata. */
+    public void adicionarTransformacao(TransformacaoNarrativa transformacao) {
+        if (transformacao == null) {
+            throw new IllegalArgumentException("transformacao nao pode ser nula");
+        }
+        this.transformacoes.add(transformacao);
+        voltarParaCandidata();
+    }
+
+    /** Remove uma transformacao existente da situacao e a devolve para candidata. */
+    public void removerTransformacao(TransformacaoNarrativa transformacao) {
+        if (transformacao == null || !this.transformacoes.remove(transformacao)) {
+            throw new IllegalArgumentException("transformacao nao pertence a situacao");
+        }
+        voltarParaCandidata();
     }
 
     public EstadoDePosse getEstadoFinalCurado() {
         return estadoFinalCurado;
     }
 
+    /** Atualiza o estado final curado (opcional) e devolve a situacao para candidata. */
+    public void setEstadoFinalCurado(EstadoDePosse estadoFinalCurado) {
+        this.estadoFinalCurado = estadoFinalCurado;
+        voltarParaCandidata();
+    }
+
     public IncognitaQuantitativa getIncognita() {
         return incognita;
+    }
+
+    /** Atualiza a incognita (opcional) e devolve a situacao para candidata. */
+    public void setIncognita(IncognitaQuantitativa incognita) {
+        this.incognita = incognita;
+        voltarParaCandidata();
     }
 
     public RelacaoEstrutural getRelacaoEstrutural() {
         return relacaoEstrutural;
     }
 
+    /** Atualiza a relacao estrutural (opcional) e devolve a situacao para candidata. */
+    public void setRelacaoEstrutural(RelacaoEstrutural relacaoEstrutural) {
+        this.relacaoEstrutural = relacaoEstrutural;
+        voltarParaCandidata();
+    }
+
     public ContextoNarrativo getContexto() {
         return contexto;
+    }
+
+    /** Atualiza o contexto narrativo e devolve a situacao para candidata. */
+    public void setContexto(ContextoNarrativo contexto) {
+        this.contexto = normalizarContexto(contexto);
+        voltarParaCandidata();
     }
 
     public StatusCuradoria getStatus() {
@@ -230,7 +325,7 @@ public final class SituacaoProblema {
                         "objeto " + item.getObjeto().getId() + " nao consta do catalogo");
             }
         }
-        for (TransformacaoNarrativa transformacao : transformacoes) {
+        for (TransformacaoNarrativa transformacao : getTransformacoes()) {
             String elemento = "transformacao " + transformacao.getOrdem();
             if (!catalogo.contem(transformacao.getAtor())) {
                 resultado = resultado.acrescentar(
@@ -273,17 +368,18 @@ public final class SituacaoProblema {
      * retirada a ordem pode decidir se a operacao e possivel.
      */
     private ResultadoValidacao validarOrdemTemporal(ResultadoValidacao resultado) {
-        for (int i = 0; i < transformacoes.size(); i++) {
-            for (int j = i + 1; j < transformacoes.size(); j++) {
-                if (transformacoes.get(i).ocupaMesmaOrdemQue(transformacoes.get(j))) {
+        List<TransformacaoNarrativa> ordenadas = getTransformacoes();
+        for (int i = 0; i < ordenadas.size(); i++) {
+            for (int j = i + 1; j < ordenadas.size(); j++) {
+                if (ordenadas.get(i).ocupaMesmaOrdemQue(ordenadas.get(j))) {
                     resultado = resultado.acrescentar(
                             TipoDiagnostico.ORDEM_TEMPORAL_REPETIDA,
                             id,
                             "as transformacoes "
-                                    + transformacoes.get(i).getAcao().getId() + " e "
-                                    + transformacoes.get(j).getAcao().getId()
+                                    + ordenadas.get(i).getAcao().getId() + " e "
+                                    + ordenadas.get(j).getAcao().getId()
                                     + " declaram a mesma ordem "
-                                    + transformacoes.get(i).getOrdem());
+                                    + ordenadas.get(i).getOrdem());
                 }
             }
         }
@@ -300,7 +396,7 @@ public final class SituacaoProblema {
      */
     private ResultadoValidacao validarPercursoDasTransformacoes(ResultadoValidacao resultado) {
         EstadoDePosse atual = estadoInicial;
-        for (TransformacaoNarrativa transformacao : transformacoes) {
+        for (TransformacaoNarrativa transformacao : getTransformacoes()) {
             if (!transformacao.getAtor().equals(atual.getPossuidor())) {
                 // Transformacao de outro participante nao altera este percurso.
                 continue;
@@ -371,7 +467,7 @@ public final class SituacaoProblema {
     public EstadoDePosse calcularEstadoFinal() {
         exigirEscopoAditivo();
         EstadoDePosse atual = estadoInicial;
-        for (TransformacaoNarrativa transformacao : transformacoes) {
+        for (TransformacaoNarrativa transformacao : getTransformacoes()) {
             if (transformacao.getAtor().equals(atual.getPossuidor())) {
                 atual = transformacao.aplicarSobre(atual);
             }
@@ -390,7 +486,7 @@ public final class SituacaoProblema {
         List<EstadoDePosse> percurso = new ArrayList<>();
         percurso.add(estadoInicial);
         EstadoDePosse atual = estadoInicial;
-        for (TransformacaoNarrativa transformacao : transformacoes) {
+        for (TransformacaoNarrativa transformacao : getTransformacoes()) {
             if (!transformacao.getAtor().equals(atual.getPossuidor())) {
                 continue;
             }
@@ -419,9 +515,10 @@ public final class SituacaoProblema {
      */
     public SequenciaNarrativa projetarSequenciaNarrativa() {
         exigirEscopoAditivo();
+        List<TransformacaoNarrativa> ordenadas = getTransformacoes();
         List<EpisodioNarrativo> episodios = new ArrayList<>();
         episodios.add(EpisodioNarrativo.deEstado(estadoInicial));
-        for (TransformacaoNarrativa transformacao : transformacoes) {
+        for (TransformacaoNarrativa transformacao : ordenadas) {
             episodios.add(EpisodioNarrativo.deEvento(transformacao));
         }
         EstadoDePosse estadoDeFecho = estadoFinalCurado;
@@ -438,7 +535,7 @@ public final class SituacaoProblema {
         if (incognita != null) {
             MarcadorTemporal momentoDaPergunta = estadoDeFecho != null
                     ? estadoDeFecho.getMomento()
-                    : MarcadorTemporal.daOrdem(transformacoes.size() + 1);
+                    : MarcadorTemporal.daOrdem(ordenadas.size() + 1);
             episodios.add(EpisodioNarrativo.dePergunta(incognita, momentoDaPergunta));
         }
         return new SequenciaNarrativa(id, episodios, contexto);
@@ -455,7 +552,7 @@ public final class SituacaoProblema {
      * seja um ato humano rastreavel. Nenhum outro metodo desta classe chama este:
      * validar() com sucesso nao promove nada.
      */
-    public SituacaoProblema promoverParaValidada(String revisor) {
+    public void promoverParaValidada(String revisor) {
         if (revisor == null || revisor.isBlank()) {
             throw new IllegalArgumentException(
                     "a promocao ao catalogo validado exige a identificacao do revisor humano");
@@ -468,24 +565,32 @@ public final class SituacaoProblema {
             throw new IllegalStateException(
                     "situacao com ambiguidade pendente nao pode ser promovida: " + id);
         }
-        return comStatus(StatusCuradoria.VALIDADA, revisor, null);
+        this.status = StatusCuradoria.VALIDADA;
+        this.revisor = revisor;
+        this.motivoDaRecusa = null;
     }
 
     /** Registra a recusa com o motivo; a situacao continua existindo. */
-    public SituacaoProblema recusar(String revisor, String motivo) {
+    public void recusar(String revisor, String motivo) {
         if (revisor == null || revisor.isBlank()) {
             throw new IllegalArgumentException("a recusa exige a identificacao do revisor humano");
         }
         if (motivo == null || motivo.isBlank()) {
             throw new IllegalArgumentException("a recusa exige motivo registrado");
         }
-        return comStatus(StatusCuradoria.RECUSADA, revisor, motivo);
+        this.status = StatusCuradoria.RECUSADA;
+        this.revisor = revisor;
+        this.motivoDaRecusa = motivo;
     }
 
-    private SituacaoProblema comStatus(StatusCuradoria novoStatus, String novoRevisor, String motivo) {
-        return new SituacaoProblema(id, enunciado, catalogo, estadoInicial, transformacoes,
-                estadoFinalCurado, incognita, relacaoEstrutural, contexto, novoStatus, novoRevisor, motivo,
-                escopo, ambiguidades);
+    /**
+     * Restaura o status para candidata nao curada, pois conteudo alterado
+     * depois da revisao precisa de nova revisao humana.
+     */
+    private void voltarParaCandidata() {
+        this.status = StatusCuradoria.CANDIDATA_NAO_CURADA;
+        this.revisor = null;
+        this.motivoDaRecusa = null;
     }
 
     private void exigirEscopoAditivo() {
@@ -499,8 +604,31 @@ public final class SituacaoProblema {
         return escopo;
     }
 
+    /** Atualiza o escopo da situacao e a devolve para candidata. */
+    public void setEscopo(EscopoDaSituacao escopo) {
+        EscopoDaSituacao novoEscopo = normalizarEscopo(escopo);
+        validarEstadoInicial(this.estadoInicial, novoEscopo);
+        this.escopo = novoEscopo;
+        voltarParaCandidata();
+    }
+
+    /** Devolve visao nao modificavel das ambiguidades declaradas. */
     public List<AmbiguidadeDeclarada> getAmbiguidades() {
-        return ambiguidades;
+        return Collections.unmodifiableList(ambiguidades);
+    }
+
+    /** Registra uma ambiguidade no enunciado e devolve a situacao para candidata. */
+    public void adicionarAmbiguidade(String trecho, String motivo) {
+        this.ambiguidades.add(new AmbiguidadeDeclarada(trecho, motivo));
+        voltarParaCandidata();
+    }
+
+    /** Remove uma ambiguidade existente da situacao e a devolve para candidata. */
+    public void removerAmbiguidade(AmbiguidadeDeclarada ambiguidade) {
+        if (ambiguidade == null || !this.ambiguidades.remove(ambiguidade)) {
+            throw new IllegalArgumentException("ambiguidade nao pertence a situacao");
+        }
+        voltarParaCandidata();
     }
 
     /** Relatorio textual da situacao com sua validacao, para o console. */

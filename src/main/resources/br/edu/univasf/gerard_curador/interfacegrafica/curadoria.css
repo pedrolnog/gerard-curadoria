@@ -1,147 +1,235 @@
-/* Tema moderno e consistente da tela de curadoria (JavaFX 21) */
+/*
+ * Tema "caderno de quadrinhos" da tela de curadoria (JavaFX 21).
+ *
+ * A ferramenta produz historias em quadrinhos para criancas; o visual conversa
+ * com isso: papel creme, tinta azul-marinho e um coral de lapis de cor para o
+ * que pede atencao. O roteiro em HTML (RenderizadorHtml) usa a mesma tinta.
+ *
+ * Paleta (valores literais, porque os popups dos ComboBox nao herdam cores
+ * declaradas na raiz):
+ *   tinta        #1d2340   texto principal, cabecalho, aba ativa
+ *   tinta suave  #5b5f7a   texto secundario
+ *   papel        #f5efe4   fundo da janela
+ *   cartao       #fffdf8   superficies
+ *   borda        #e6dccb   contornos
+ *   coral        #e85d3f   acao principal, foco, destaque de titulo
+ *   mostarda     #f2b632   candidata
+ *   verde        #2f8f5b   validada
+ *   vermelho     #c0392b   recusada, erro
+ */
 
 .raiz-curadoria {
     -fx-font-family: "System";
     -fx-font-size: 13px;
-    -fx-background-color: #f7f8fa;
-    -fx-text-fill: #0f172a;
+    -fx-background-color: #f5efe4;
+    -fx-text-fill: #1d2340;
 }
 
-/* Barra superior */
+/* ------------------------------------------------------------------ */
+/* Cabecalho                                                          */
+/* ------------------------------------------------------------------ */
+
 .barra-topo {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e2e8f0;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: #1d2340;
+    -fx-effect: dropshadow(gaussian, rgba(29, 35, 64, 0.25), 14, 0, 0, 3);
+}
+
+.logo-app {
+    -fx-background-color: #e85d3f;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-max-width: 44px;
+    -fx-max-height: 44px;
+    -fx-rotate: -4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 6, 0, 0, 2);
 }
 
 .titulo-app {
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #ffffff;
 }
 
 .subtitulo-app {
     -fx-font-size: 12px;
-    -fx-text-fill: #64748b;
+    -fx-text-fill: #b9bfd6;
 }
 
-/* Painel lateral e cartoes brancos */
+.divisor-topo {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-min-width: 1px;
+    -fx-max-width: 1px;
+    -fx-pref-height: 26px;
+    -fx-max-height: 26px;
+}
+
+/* Botoes do cabecalho ficam sobre fundo escuro */
+.barra-topo .botao-secundario {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: rgba(255, 255, 255, 0.28);
+}
+
+.barra-topo .botao-secundario:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-border-color: rgba(255, 255, 255, 0.45);
+}
+
+.barra-topo .botao-sucesso {
+    -fx-background-color: #2f8f5b;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #2f8f5b;
+}
+
+.barra-topo .botao-sucesso:hover {
+    -fx-background-color: #287a4d;
+}
+
+.barra-topo .botao-perigo {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffb4a6;
+    -fx-border-color: rgba(255, 180, 166, 0.55);
+}
+
+.barra-topo .botao-perigo:hover {
+    -fx-background-color: rgba(232, 93, 63, 0.18);
+}
+
+/* ------------------------------------------------------------------ */
+/* Superficies                                                        */
+/* ------------------------------------------------------------------ */
+
 .painel-lateral,
 .cartao,
 .cartao-roteiro {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 10px;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 10px;
+    -fx-background-color: #fffdf8;
+    -fx-background-radius: 14px;
+    -fx-border-color: #e6dccb;
+    -fx-border-radius: 14px;
     -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 12, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(29, 35, 64, 0.07), 16, 0, 0, 3);
 }
 
 .cartao {
-    -fx-padding: 16px;
+    -fx-padding: 18px;
 }
 
 .cartao-roteiro {
     -fx-padding: 8px;
 }
 
+/* Titulo de secao com um traco de marca-texto coral embaixo */
 .titulo-secao {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #1d2340;
+    -fx-border-color: transparent transparent #e85d3f transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-padding: 0 2 4 0;
 }
 
 .rotulo-campo {
     -fx-font-weight: bold;
-    -fx-text-fill: #334155;
+    -fx-text-fill: #3a3f5c;
 }
 
 .texto-secundario {
     -fx-font-size: 12px;
-    -fx-text-fill: #475569;
+    -fx-text-fill: #5b5f7a;
 }
 
-/* Botoes */
-.botao-primario {
-    -fx-background-color: #0f766e;
-    -fx-text-fill: #ffffff;
+/* ------------------------------------------------------------------ */
+/* Botoes                                                             */
+/* ------------------------------------------------------------------ */
+
+.botao-primario,
+.botao-secundario,
+.botao-sucesso,
+.botao-perigo {
     -fx-font-weight: bold;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1.5px;
     -fx-padding: 8 16 8 16;
     -fx-cursor: hand;
 }
 
+.botao-primario {
+    -fx-background-color: #e85d3f;
+    -fx-border-color: #e85d3f;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(232, 93, 63, 0.35), 8, 0, 0, 2);
+}
+
 .botao-primario:hover {
-    -fx-background-color: #115e59;
+    -fx-background-color: #d64f32;
+    -fx-border-color: #d64f32;
 }
 
 .botao-primario:pressed {
-    -fx-background-color: #134e4a;
+    -fx-background-color: #c8452a;
+    -fx-border-color: #c8452a;
+    -fx-effect: none;
 }
 
 .botao-secundario {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: #0f172a;
-    -fx-border-color: #cbd5e1;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 8 14 8 14;
-    -fx-cursor: hand;
+    -fx-background-color: #fffdf8;
+    -fx-text-fill: #1d2340;
+    -fx-border-color: #d9cdb8;
 }
 
 .botao-secundario:hover {
-    -fx-background-color: #f1f5f9;
+    -fx-background-color: #f7f0e3;
 }
 
 .botao-secundario:selected {
-    -fx-background-color: #f0fdfa;
-    -fx-text-fill: #0f766e;
-    -fx-border-color: #0f766e;
+    -fx-background-color: #1d2340;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #1d2340;
 }
 
 .botao-sucesso {
-    -fx-background-color: #ecfdf5;
-    -fx-text-fill: #0f766e;
-    -fx-font-weight: bold;
-    -fx-border-color: #99f6e4;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 8 14 8 14;
-    -fx-cursor: hand;
+    -fx-background-color: #e3f3e9;
+    -fx-text-fill: #1f6b43;
+    -fx-border-color: #a8d8bb;
 }
 
 .botao-sucesso:hover {
-    -fx-background-color: #ccfbf1;
+    -fx-background-color: #d1ecdc;
 }
 
 .botao-perigo {
-    -fx-background-color: #fef2f2;
-    -fx-text-fill: #b91c1c;
-    -fx-font-weight: bold;
-    -fx-border-color: #fecaca;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 8 14 8 14;
-    -fx-cursor: hand;
+    -fx-background-color: #fdf0ec;
+    -fx-text-fill: #a3301f;
+    -fx-border-color: #f2c2b7;
 }
 
 .botao-perigo:hover {
-    -fx-background-color: #fee2e2;
+    -fx-background-color: #fbe0d9;
 }
 
-/* Campos de entrada */
+/* ------------------------------------------------------------------ */
+/* Campos de entrada                                                  */
+/* ------------------------------------------------------------------ */
+
 .text-field,
 .text-area,
 .combo-box,
 .spinner {
     -fx-background-color: #ffffff;
-    -fx-border-color: #cbd5e1;
-    -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
+    -fx-border-color: #d9cdb8;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-prompt-text-fill: #a39c8e;
+    -fx-text-fill: #1d2340;
+    -fx-highlight-fill: #f9c9bc;
+    -fx-highlight-text-fill: #1d2340;
 }
 
 .text-field,
@@ -153,25 +241,83 @@
 .text-area:focused,
 .combo-box:focused,
 .spinner:focused {
-    -fx-border-color: #0f766e;
+    -fx-border-color: #e85d3f;
+    -fx-effect: dropshadow(gaussian, rgba(232, 93, 63, 0.22), 8, 0.2, 0, 0);
 }
 
 .text-area .content {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 8px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 10px;
+}
+
+.text-area .scroll-pane,
+.text-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
 }
 
 .spinner .text-field {
     -fx-border-width: 0;
+    -fx-effect: none;
 }
 
-/* Abas */
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #f7f0e3;
+}
+
+.spinner .increment-arrow,
+.spinner .decrement-arrow,
+.combo-box .arrow {
+    -fx-background-color: #5b5f7a;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1d2340;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #fffdf8;
+    -fx-background-radius: 10px;
+    -fx-border-color: #e6dccb;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(29, 35, 64, 0.15), 14, 0, 0, 4);
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1d2340;
+    -fx-padding: 7 12 7 12;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #f7f0e3;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #fde6df;
+    -fx-text-fill: #1d2340;
+}
+
+/* ------------------------------------------------------------------ */
+/* Abas como trilha de etapas numeradas                               */
+/* ------------------------------------------------------------------ */
+
 .abas-curadoria {
     -fx-background-color: transparent;
 }
 
 .abas-curadoria .tab-header-area {
-    -fx-padding: 0 4 6 4;
+    -fx-padding: 2 4 10 4;
 }
 
 .abas-curadoria .tab-header-background {
@@ -179,27 +325,38 @@
 }
 
 .abas-curadoria .tab {
-    -fx-background-color: #e2e8f0;
-    -fx-background-radius: 8 8 0 0;
-    -fx-padding: 8 14 8 14;
+    -fx-background-color: transparent;
+    -fx-background-radius: 999px;
+    -fx-border-color: transparent;
+    -fx-border-radius: 999px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
 
+.abas-curadoria .tab:hover {
+    -fx-background-color: #ece3d3;
+}
+
 .abas-curadoria .tab:selected {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #0f766e #e2e8f0 transparent #e2e8f0;
-    -fx-border-width: 2 1 0 1;
-    -fx-border-radius: 8 8 0 0;
+    -fx-background-color: #1d2340;
+    -fx-border-color: #1d2340;
 }
 
 .abas-curadoria .tab .tab-label {
-    -fx-text-fill: #475569;
+    -fx-text-fill: #5b5f7a;
     -fx-font-weight: bold;
-    -fx-font-size: 12.5px;
+    -fx-font-size: 13px;
 }
 
 .abas-curadoria .tab:selected .tab-label {
-    -fx-text-fill: #0f766e;
+    -fx-text-fill: #ffffff;
+}
+
+.abas-curadoria .tab:selected .focus-indicator,
+.abas-curadoria .tab .focus-indicator {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .abas-curadoria .tab-content-area {
@@ -208,67 +365,101 @@
 
 .rolagem-aba {
     -fx-background-color: transparent;
-    -fx-background: #f7f8fa;
+    -fx-background: #f5efe4;
     -fx-border-color: transparent;
 }
 
 .rolagem-aba > .viewport {
-    -fx-background-color: #f7f8fa;
+    -fx-background-color: #f5efe4;
 }
 
 .conteudo-aba {
-    -fx-background-color: #f7f8fa;
+    -fx-background-color: #f5efe4;
 }
 
-/* Tabelas */
+/* ------------------------------------------------------------------ */
+/* Tabelas: sem grade vertical e sem listras nas linhas vazias        */
+/* ------------------------------------------------------------------ */
+
 .table-view {
     -fx-background-color: #ffffff;
-    -fx-border-color: #e2e8f0;
+    -fx-border-color: #e6dccb;
     -fx-border-width: 1px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 0;
+}
+
+.table-view:focused {
+    -fx-background-insets: 0;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #f8fafc;
-    -fx-background-radius: 8 8 0 0;
-    -fx-border-color: #e2e8f0;
+    -fx-background-color: #f7f0e3;
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-color: #e6dccb;
     -fx-border-width: 0 0 1 0;
 }
 
 .table-view .column-header,
 .table-view .filler {
     -fx-background-color: transparent;
-    -fx-size: 34px;
+    -fx-border-color: transparent;
+    -fx-size: 36px;
 }
 
 .table-view .column-header .label {
-    -fx-text-fill: #334155;
+    -fx-text-fill: #5b5f7a;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
     -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 8;
 }
 
 .table-row-cell {
     -fx-background-color: #ffffff;
-    -fx-border-color: #f1f5f9;
+    -fx-border-color: #f1eadc;
     -fx-border-width: 0 0 1 0;
-    -fx-cell-size: 34px;
+    -fx-cell-size: 36px;
 }
 
 .table-row-cell:odd {
-    -fx-background-color: #fafbfc;
+    -fx-background-color: #fffcf6;
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #ccfbf1;
+.table-row-cell:empty,
+.table-row-cell:empty:odd {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
-.table-row-cell:selected .text {
-    -fx-fill: #0f172a;
+.table-row-cell:filled:hover {
+    -fx-background-color: #faf4ea;
 }
 
-/* Listas laterais e de diagnosticos */
+.table-row-cell:filled:selected {
+    -fx-background-color: #fde6df;
+}
+
+.table-row-cell .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 0 8 0 8;
+    -fx-text-fill: #1d2340;
+}
+
+.table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #1d2340;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #a39c8e;
+    -fx-font-style: italic;
+}
+
+/* ------------------------------------------------------------------ */
+/* Lista lateral de situacoes                                         */
+/* ------------------------------------------------------------------ */
+
 .lista-situacoes,
 .lista-diagnosticos {
     -fx-background-color: transparent;
@@ -279,149 +470,222 @@
 .lista-situacoes .list-cell,
 .lista-diagnosticos .list-cell {
     -fx-background-color: transparent;
-    -fx-padding: 4 0 4 0;
+    -fx-padding: 5 0 5 0;
 }
 
+.lista-situacoes .placeholder .label,
+.lista-diagnosticos .placeholder .label {
+    -fx-text-fill: #a39c8e;
+    -fx-font-style: italic;
+}
+
+/* Cartao da situacao: faixa colorida a esquerda indica o status */
 .celula-situacao {
-    -fx-background-color: #f8fafc;
-    -fx-background-radius: 8px;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-padding: 10 12 10 12;
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-border-color: #e6dccb #e6dccb #e6dccb #f2b632;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1 1 1 5;
+    -fx-padding: 11 12 11 12;
+    -fx-cursor: hand;
+}
+
+.celula-situacao.celula-validada {
+    -fx-border-color: #e6dccb #e6dccb #e6dccb #2f8f5b;
+}
+
+.celula-situacao.celula-recusada {
+    -fx-border-color: #e6dccb #e6dccb #e6dccb #c0392b;
 }
 
 .lista-situacoes .list-cell:filled:hover .celula-situacao {
-    -fx-background-color: #f1f5f9;
+    -fx-background-color: #faf4ea;
 }
 
 .lista-situacoes .list-cell:filled:selected .celula-situacao {
-    -fx-background-color: #f0fdfa;
-    -fx-border-color: #0f766e;
-    -fx-border-width: 1.5px;
+    -fx-background-color: #fff4ef;
+    -fx-effect: dropshadow(gaussian, rgba(232, 93, 63, 0.22), 10, 0, 0, 2);
 }
 
 .situacao-id {
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
-    -fx-font-size: 13px;
+    -fx-text-fill: #1d2340;
+    -fx-font-size: 13.5px;
 }
 
 .situacao-resumo {
-    -fx-text-fill: #475569;
+    -fx-text-fill: #5b5f7a;
     -fx-font-size: 12px;
 }
 
-/* Badges de status */
+/* ------------------------------------------------------------------ */
+/* Selos de status                                                    */
+/* ------------------------------------------------------------------ */
+
 .badge-status {
     -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 2 8 2 8;
-    -fx-background-radius: 12px;
+    -fx-padding: 3 9 3 9;
+    -fx-background-radius: 999px;
 }
 
 .badge-candidata {
-    -fx-background-color: #fef3c7;
-    -fx-text-fill: #b45309;
+    -fx-background-color: #fdf0cc;
+    -fx-text-fill: #8a5a00;
 }
 
 .badge-validada {
-    -fx-background-color: #dcfce7;
-    -fx-text-fill: #15803d;
+    -fx-background-color: #dff3e6;
+    -fx-text-fill: #1f6b43;
 }
 
 .badge-recusada {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #b91c1c;
+    -fx-background-color: #fbe0db;
+    -fx-text-fill: #a3301f;
 }
 
-/* Celulas de diagnostico */
+/* ------------------------------------------------------------------ */
+/* Diagnosticos da revisao                                            */
+/* ------------------------------------------------------------------ */
+
 .celula-diagnostico {
     -fx-background-color: #ffffff;
-    -fx-background-radius: 8px;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 8px;
+    -fx-background-radius: 10px;
+    -fx-border-color: #e6dccb;
+    -fx-border-radius: 10px;
     -fx-border-width: 1px;
-    -fx-padding: 10 12 10 12;
+    -fx-padding: 12 14 12 14;
 }
 
 .etiqueta-diagnostico {
     -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 2 8 2 8;
-    -fx-background-radius: 6px;
+    -fx-padding: 3 9 3 9;
+    -fx-background-radius: 999px;
 }
 
 .etiqueta-erro {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #b91c1c;
+    -fx-background-color: #fbe0db;
+    -fx-text-fill: #a3301f;
 }
 
 .etiqueta-aviso {
-    -fx-background-color: #fef3c7;
-    -fx-text-fill: #b45309;
+    -fx-background-color: #fdf0cc;
+    -fx-text-fill: #8a5a00;
 }
 
 .diagnostico-tipo {
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #1d2340;
     -fx-font-size: 13px;
 }
 
 .diagnostico-elemento {
     -fx-font-size: 12px;
-    -fx-text-fill: #475569;
+    -fx-text-fill: #5b5f7a;
 }
 
 .diagnostico-detalhe {
     -fx-font-size: 12.5px;
-    -fx-text-fill: #1e293b;
+    -fx-text-fill: #2b3050;
 }
 
-/* Resumo de validacao */
+/* Faixa de resumo da validacao */
 .resumo-validacao {
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-padding: 8 12 8 12;
-    -fx-background-radius: 8px;
+    -fx-padding: 12 16 12 16;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-width: 0 0 0 5;
 }
 
 .resumo-neutro {
-    -fx-background-color: #f1f5f9;
-    -fx-text-fill: #475569;
+    -fx-background-color: #f7f0e3;
+    -fx-border-color: #d9cdb8;
+    -fx-text-fill: #5b5f7a;
 }
 
 .resumo-valido {
-    -fx-background-color: #dcfce7;
-    -fx-text-fill: #15803d;
+    -fx-background-color: #e3f3e9;
+    -fx-border-color: #2f8f5b;
+    -fx-text-fill: #1f6b43;
 }
 
 .resumo-invalido {
-    -fx-background-color: #fee2e2;
-    -fx-text-fill: #b91c1c;
+    -fx-background-color: #fbe0db;
+    -fx-border-color: #c0392b;
+    -fx-text-fill: #a3301f;
 }
 
 /* Roteiro textual monoespacado */
 .roteiro-textual {
     -fx-font-family: "JetBrains Mono", "Fira Code", "Consolas", "Monospace";
     -fx-font-size: 12.5px;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #1d2340;
     -fx-border-width: 0;
 }
 
-/* Rodape */
+/* ------------------------------------------------------------------ */
+/* Barras de rolagem finas                                            */
+/* ------------------------------------------------------------------ */
+
+.scroll-bar {
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+}
+
+.scroll-bar .track,
+.scroll-bar .track-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #d9cdb8;
+    -fx-background-radius: 999px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #c4b59c;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 10px;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 10px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Rodape                                                             */
+/* ------------------------------------------------------------------ */
+
 .barra-rodape {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e2e8f0;
+    -fx-background-color: #fffdf8;
+    -fx-border-color: #e6dccb;
     -fx-border-width: 1 0 0 0;
 }
 
 .rotulo-status {
-    -fx-text-fill: #334155;
+    -fx-text-fill: #3a3f5c;
     -fx-font-size: 12.5px;
 }
 
 .rotulo-status-prefixo {
-    -fx-text-fill: #64748b;
+    -fx-text-fill: #5b5f7a;
     -fx-font-size: 12px;
 }

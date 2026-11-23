@@ -108,50 +108,50 @@ public final class MapeadorSituacao {
         if (dto == null) {
             throw new ErroDeLeituraJson("documento JSON vazio ou nulo");
         }
-        String id = exigirTexto(dto.id(), "id");
-        String enunciado = exigirTexto(dto.enunciado(), "enunciado");
-        EscopoDaSituacao escopo = lerEscopo(dto.escopo());
+        String id = exigirTexto(dto.getId(), "id");
+        String enunciado = exigirTexto(dto.getEnunciado(), "enunciado");
+        EscopoDaSituacao escopo = lerEscopo(dto.getEscopo());
 
         CatalogoDaSituacao catalogo = lerCatalogo(dto);
 
         EstadoDePosse estadoInicial = null;
-        if (dto.estadoInicial() != null) {
-            estadoInicial = lerEstado(dto.estadoInicial(), catalogo, "estado_inicial");
+        if (dto.getEstadoInicial() != null) {
+            estadoInicial = lerEstado(dto.getEstadoInicial(), catalogo, "estado_inicial");
         } else if (escopo.permiteModeloAditivo()) {
             throw new ErroDeLeituraJson("campo obrigatorio ausente: estado_inicial");
         }
 
-        EstadoDePosse estadoFinal = dto.estadoFinalCurado() == null
+        EstadoDePosse estadoFinal = dto.getEstadoFinalCurado() == null
                 ? null
-                : lerEstado(dto.estadoFinalCurado(), catalogo, "estado_final_curado");
+                : lerEstado(dto.getEstadoFinalCurado(), catalogo, "estado_final_curado");
 
         SituacaoProblema.Construtor construtor = SituacaoProblema.construtor(id, enunciado)
                 .comCatalogo(catalogo)
                 .comEstadoInicial(estadoInicial)
                 .comEstadoFinalCurado(estadoFinal)
-                .comContexto(lerContexto(dto.contexto()))
-                .comIncognita(lerIncognita(dto.incognita(), catalogo))
-                .comRelacaoEstrutural(lerRelacao(dto.relacao(), catalogo, id));
+                .comContexto(lerContexto(dto.getContexto()))
+                .comIncognita(lerIncognita(dto.getIncognita(), catalogo))
+                .comRelacaoEstrutural(lerRelacao(dto.getRelacao(), catalogo, id));
 
         if (!escopo.permiteModeloAditivo()) {
             construtor.rotuladaForaDoEscopo();
         }
-        if (dto.ambiguidades() != null) {
-            for (AmbiguidadeDto ambiguidade : dto.ambiguidades()) {
+        if (dto.getAmbiguidades() != null) {
+            for (AmbiguidadeDto ambiguidade : dto.getAmbiguidades()) {
                 if (ambiguidade == null) {
                     throw new ErroDeLeituraJson("elemento nulo em ambiguidades");
                 }
                 construtor.comAmbiguidade(
-                        exigirTexto(ambiguidade.trecho(), "ambiguidades.trecho"),
-                        exigirTexto(ambiguidade.motivo(), "ambiguidades.motivo"));
+                        exigirTexto(ambiguidade.getTrecho(), "ambiguidades.trecho"),
+                        exigirTexto(ambiguidade.getMotivo(), "ambiguidades.motivo"));
             }
         }
-        for (TransformacaoNarrativa transformacao : lerTransformacoes(dto.transformacoes(), catalogo)) {
+        for (TransformacaoNarrativa transformacao : lerTransformacoes(dto.getTransformacoes(), catalogo)) {
             construtor.comTransformacao(transformacao);
         }
 
         SituacaoProblema situacao = construtor.construir();
-        return aplicarStatus(situacao, dto.status(), dto.revisor(), dto.motivoRecusa());
+        return aplicarStatus(situacao, dto.getStatus(), dto.getRevisor(), dto.getMotivoRecusa());
     }
 
     // ------------------------------------------------------------------
@@ -315,63 +315,63 @@ public final class MapeadorSituacao {
     // ------------------------------------------------------------------
 
     private CatalogoDaSituacao lerCatalogo(SituacaoDto dto) {
-        if (dto.participantes() == null) {
+        if (dto.getParticipantes() == null) {
             throw new ErroDeLeituraJson("campo obrigatorio ausente: participantes");
         }
-        if (dto.objetosContados() == null) {
+        if (dto.getObjetosContados() == null) {
             throw new ErroDeLeituraJson("campo obrigatorio ausente: objetos_contados");
         }
         CatalogoDaSituacao.Construtor construtor = CatalogoDaSituacao.construtor();
         try {
-            for (ParticipanteDto p : dto.participantes()) {
+            for (ParticipanteDto p : dto.getParticipantes()) {
                 if (p == null) {
                     throw new ErroDeLeituraJson("participante nulo em participantes");
                 }
-                String id = exigirTexto(p.id(), "participantes.id");
-                String nome = exigirTexto(p.nome(), "participantes.nome");
-                ReferenciaVisualParticipante refVisual = (p.referenciaVisual() == null
-                        || p.referenciaVisual().isBlank())
+                String id = exigirTexto(p.getId(), "participantes.id");
+                String nome = exigirTexto(p.getNome(), "participantes.nome");
+                ReferenciaVisualParticipante refVisual = (p.getReferenciaVisual() == null
+                        || p.getReferenciaVisual().isBlank())
                         ? ReferenciaVisualParticipante.naoDefinida()
-                        : ReferenciaVisualParticipante.de(p.referenciaVisual());
+                        : ReferenciaVisualParticipante.de(p.getReferenciaVisual());
                 construtor.comParticipante(new ParticipanteNarrativo(id, nome, refVisual));
             }
 
             Map<String, FamiliaObjeto> familias = new LinkedHashMap<>();
-            for (ObjetoContadoDto obj : dto.objetosContados()) {
+            for (ObjetoContadoDto obj : dto.getObjetosContados()) {
                 if (obj == null) {
                     throw new ErroDeLeituraJson("objeto nulo em objetos_contados");
                 }
-                String id = exigirTexto(obj.id(), "objetos_contados.id");
-                String idFamilia = exigirTexto(obj.familia(), "objetos_contados.familia");
-                String nomeFamilia = (obj.familiaNome() == null || obj.familiaNome().isBlank())
+                String id = exigirTexto(obj.getId(), "objetos_contados.id");
+                String idFamilia = exigirTexto(obj.getFamilia(), "objetos_contados.familia");
+                String nomeFamilia = (obj.getFamiliaNome() == null || obj.getFamiliaNome().isBlank())
                         ? idFamilia
-                        : obj.familiaNome();
+                        : obj.getFamiliaNome();
                 FamiliaObjeto familia = familias.computeIfAbsent(
                         idFamilia, chave -> new FamiliaObjeto(chave, nomeFamilia));
 
                 Set<CaracteristicaObjeto> caracteristicas = new LinkedHashSet<>();
-                if (obj.caracteristicas() != null) {
-                    for (Map.Entry<String, String> entrada : obj.caracteristicas().entrySet()) {
+                if (obj.getCaracteristicas() != null) {
+                    for (Map.Entry<String, String> entrada : obj.getCaracteristicas().entrySet()) {
                         caracteristicas.add(CaracteristicaObjeto.de(
                                 exigirTexto(entrada.getKey(), "caracteristicas.dimensao"),
                                 exigirTexto(entrada.getValue(), "caracteristicas.valor")));
                     }
                 }
 
-                RealizacaoTextualDto rtDto = obj.realizacaoTextual();
+                RealizacaoTextualDto rtDto = obj.getRealizacaoTextual();
                 if (rtDto == null) {
                     throw new ErroDeLeituraJson(
                             "campo obrigatorio ausente: objetos_contados.realizacao_textual");
                 }
                 RealizacaoTextualObjeto realizacaoTextual = new RealizacaoTextualObjeto(
-                        exigirTexto(rtDto.singular(), "realizacao_textual.singular"),
-                        exigirTexto(rtDto.plural(), "realizacao_textual.plural"),
-                        exigirTexto(rtDto.idioma(), "realizacao_textual.idioma"));
+                        exigirTexto(rtDto.getSingular(), "realizacao_textual.singular"),
+                        exigirTexto(rtDto.getPlural(), "realizacao_textual.plural"),
+                        exigirTexto(rtDto.getIdioma(), "realizacao_textual.idioma"));
 
-                ReferenciaVisual refVisual = (obj.referenciaVisual() == null
-                        || obj.referenciaVisual().isBlank())
+                ReferenciaVisual refVisual = (obj.getReferenciaVisual() == null
+                        || obj.getReferenciaVisual().isBlank())
                         ? ReferenciaVisual.naoDefinida()
-                        : ReferenciaVisual.de(obj.referenciaVisual());
+                        : ReferenciaVisual.de(obj.getReferenciaVisual());
 
                 construtor.comObjeto(new ObjetoContado(
                         id, familia, caracteristicas, realizacaoTextual, refVisual));
@@ -386,7 +386,7 @@ public final class MapeadorSituacao {
         if (dto == null) {
             return ContextoNarrativo.naoInformado();
         }
-        return new ContextoNarrativo(dto.local(), dto.situacao(), dto.momento());
+        return new ContextoNarrativo(dto.getLocal(), dto.getSituacao(), dto.getMomento());
     }
 
     private IncognitaQuantitativa lerIncognita(IncognitaDto dto, CatalogoDaSituacao catalogo) {
@@ -395,27 +395,27 @@ public final class MapeadorSituacao {
         }
         PapelQuantitativo papel = lerEnumerado(
                 PapelQuantitativo.class,
-                exigirTexto(dto.papel(), "incognita.papel"),
+                exigirTexto(dto.getPapel(), "incognita.papel"),
                 "papel na incognita");
         IncognitaQuantitativa incognita = IncognitaQuantitativa.designar(
-                papel, exigirTexto(dto.pergunta(), "incognita.pergunta"));
+                papel, exigirTexto(dto.getPergunta(), "incognita.pergunta"));
 
-        if (Boolean.TRUE.equals(dto.resolvida())) {
-            String idObjeto = exigirTexto(dto.objetoResolvido(), "incognita.objeto_resolvido");
+        if (Boolean.TRUE.equals(dto.getResolvida())) {
+            String idObjeto = exigirTexto(dto.getObjetoResolvido(), "incognita.objeto_resolvido");
             ObjetoContado objeto = exigirObjeto(catalogo, idObjeto, "incognita.objeto_resolvido");
-            Integer valor = exigirInteiro(dto.valorResolvido(), "incognita.valor_resolvido");
-            incognita = incognita.resolver(objeto.contar(valor));
+            Integer valor = exigirInteiro(dto.getValorResolvido(), "incognita.valor_resolvido");
+            incognita.resolver(objeto.contar(valor));
         }
         return incognita;
     }
 
     private EstadoDePosse lerEstado(EstadoDto dto, CatalogoDaSituacao catalogo, String contexto) {
-        String idPossuidor = exigirTexto(dto.possuidor(), contexto + ".possuidor");
+        String idPossuidor = exigirTexto(dto.getPossuidor(), contexto + ".possuidor");
         ParticipanteNarrativo possuidor = exigirParticipante(
                 catalogo, idPossuidor, contexto + ".possuidor");
-        int ordem = exigirInteiro(dto.ordemTemporal(), contexto + ".ordem_temporal");
-        String rotulo = exigirTexto(dto.rotuloTemporal(), contexto + ".rotulo_temporal");
-        if (dto.itens() == null) {
+        int ordem = exigirInteiro(dto.getOrdemTemporal(), contexto + ".ordem_temporal");
+        String rotulo = exigirTexto(dto.getRotuloTemporal(), contexto + ".rotulo_temporal");
+        if (dto.getItens() == null) {
             throw new ErroDeLeituraJson("campo obrigatorio ausente: " + contexto + ".itens");
         }
 
@@ -427,7 +427,7 @@ public final class MapeadorSituacao {
         }
 
         Inventario inventario = Inventario.vazio();
-        for (QuantidadeDto item : dto.itens()) {
+        for (QuantidadeDto item : dto.getItens()) {
             inventario = inventario.adicionar(lerQuantidade(item, catalogo, contexto + ".itens"));
         }
         return new EstadoDePosse(possuidor, inventario, momento);
@@ -439,16 +439,16 @@ public final class MapeadorSituacao {
         if (dto == null) {
             throw new ErroDeLeituraJson("quantidade nula em " + contexto);
         }
-        String idObjeto = exigirTexto(dto.objeto(), contexto + ".objeto");
+        String idObjeto = exigirTexto(dto.getObjeto(), contexto + ".objeto");
         ObjetoContado objeto = exigirObjeto(catalogo, idObjeto, contexto);
-        int numero = exigirInteiro(dto.numero(), contexto + ".numero");
+        int numero = exigirInteiro(dto.getNumero(), contexto + ".numero");
         GrandezaQuantitativa grandeza = lerEnumerado(
                 GrandezaQuantitativa.class,
-                exigirTexto(dto.grandeza(), contexto + ".grandeza"),
+                exigirTexto(dto.getGrandeza(), contexto + ".grandeza"),
                 "grandeza");
         UnidadeMedida unidade = lerEnumerado(
                 UnidadeMedida.class,
-                exigirTexto(dto.unidade(), contexto + ".unidade"),
+                exigirTexto(dto.getUnidade(), contexto + ".unidade"),
                 "unidade");
         try {
             return objeto.quantificar(Numero.de(numero), grandeza, unidade);
@@ -467,34 +467,34 @@ public final class MapeadorSituacao {
             if (item == null) {
                 throw new ErroDeLeituraJson("transformacao nula em transformacoes");
             }
-            int ordem = exigirInteiro(item.ordem(), "transformacoes.ordem");
+            int ordem = exigirInteiro(item.getOrdem(), "transformacoes.ordem");
             String elemento = "transformacao " + ordem;
-            String marcador = exigirTexto(item.marcador(), elemento + ".marcador");
+            String marcador = exigirTexto(item.getMarcador(), elemento + ".marcador");
 
             ParticipanteNarrativo ator = exigirParticipante(
-                    catalogo, exigirTexto(item.ator(), elemento + ".ator"), elemento + ".ator");
-            ParticipanteNarrativo destinatario = (item.destinatario() == null
-                    || item.destinatario().isBlank())
+                    catalogo, exigirTexto(item.getAtor(), elemento + ".ator"), elemento + ".ator");
+            ParticipanteNarrativo destinatario = (item.getDestinatario() == null
+                    || item.getDestinatario().isBlank())
                     ? null
-                    : exigirParticipante(catalogo, item.destinatario(), elemento + ".destinatario");
+                    : exigirParticipante(catalogo, item.getDestinatario(), elemento + ".destinatario");
 
-            AcaoDto acaoDto = item.acao();
+            AcaoDto acaoDto = item.getAcao();
             if (acaoDto == null) {
                 throw new ErroDeLeituraJson("campo obrigatorio ausente: " + elemento + ".acao");
             }
             SentidoTransformacao sentido = lerEnumerado(
                     SentidoTransformacao.class,
-                    exigirTexto(acaoDto.sentido(), elemento + ".acao.sentido"),
+                    exigirTexto(acaoDto.getSentido(), elemento + ".acao.sentido"),
                     "sentido");
-            if (acaoDto.exigeDestinatario() == null) {
+            if (acaoDto.getExigeDestinatario() == null) {
                 throw new ErroDeLeituraJson(
                         "campo obrigatorio ausente: " + elemento + ".acao.exige_destinatario");
             }
-            boolean exigeDestinatario = acaoDto.exigeDestinatario();
-            String idAcao = exigirTexto(acaoDto.id(), elemento + ".acao.id");
-            String verbo = exigirTexto(acaoDto.verbo(), elemento + ".acao.verbo");
-            String participio = exigirTexto(acaoDto.participio(), elemento + ".acao.participio");
-            String preposicao = acaoDto.preposicaoDestinatario();
+            boolean exigeDestinatario = acaoDto.getExigeDestinatario();
+            String idAcao = exigirTexto(acaoDto.getId(), elemento + ".acao.id");
+            String verbo = exigirTexto(acaoDto.getVerbo(), elemento + ".acao.verbo");
+            String participio = exigirTexto(acaoDto.getParticipio(), elemento + ".acao.participio");
+            String preposicao = acaoDto.getPreposicaoDestinatario();
 
             try {
                 AcaoNarrativa acao = (preposicao == null || preposicao.isBlank())
@@ -503,7 +503,7 @@ public final class MapeadorSituacao {
                                 preposicao);
 
                 Quantidade quantidade = lerQuantidade(
-                        item.quantidade(), catalogo, elemento + ".quantidade");
+                        item.getQuantidade(), catalogo, elemento + ".quantidade");
                 transformacoes.add(new TransformacaoNarrativa(
                         ator, acao, destinatario, quantidade,
                         new MarcadorTemporal(ordem, marcador)));
@@ -520,9 +520,9 @@ public final class MapeadorSituacao {
         if (dto == null) {
             return null;
         }
-        String categoria = exigirTexto(dto.categoria(), "relacao.categoria");
-        String idRelacao = (dto.id() == null || dto.id().isBlank()) ? idSituacao : dto.id();
-        Map<String, QuantidadeDto> papeis = dto.papeis();
+        String categoria = exigirTexto(dto.getCategoria(), "relacao.categoria");
+        String idRelacao = (dto.getId() == null || dto.getId().isBlank()) ? idSituacao : dto.getId();
+        Map<String, QuantidadeDto> papeis = dto.getPapeis();
 
         return switch (categoria) {
             case "COMPOSICAO_TRANSFORMACOES" -> lerComposicaoTransformacoes(dto, papeis, catalogo, idRelacao);
@@ -551,13 +551,13 @@ public final class MapeadorSituacao {
                     case ESTADO_FINAL -> construtor.comEstadoFinal(quantidade);
                     case TRANSFORMACAO_PRIMEIRA -> construtor.comPrimeiraTransformacao(
                             quantidade,
-                            lerSentidoOuPadrao(dto.sentidoPrimeira(), "relacao.sentido_primeira"));
+                            lerSentidoOuPadrao(dto.getSentidoPrimeira(), "relacao.sentido_primeira"));
                     case TRANSFORMACAO_SEGUNDA -> construtor.comSegundaTransformacao(
                             quantidade,
-                            lerSentidoOuPadrao(dto.sentidoSegunda(), "relacao.sentido_segunda"));
+                            lerSentidoOuPadrao(dto.getSentidoSegunda(), "relacao.sentido_segunda"));
                     case TRANSFORMACAO_RESULTANTE -> construtor.comTransformacaoResultante(
                             quantidade,
-                            lerSentidoOuPadrao(dto.sentidoResultante(), "relacao.sentido_resultante"));
+                            lerSentidoOuPadrao(dto.getSentidoResultante(), "relacao.sentido_resultante"));
                     default -> throw new ErroDeLeituraJson(
                             "papel invalido para COMPOSICAO_TRANSFORMACOES: " + papel);
                 }
@@ -572,15 +572,15 @@ public final class MapeadorSituacao {
                                                  String idRelacao) {
         ComparacaoQuantitativa.Construtor construtor = ComparacaoQuantitativa.construtor(idRelacao);
 
-        ParticipanteNarrativo referente = (dto.participanteReferente() == null
-                || dto.participanteReferente().isBlank())
+        ParticipanteNarrativo referente = (dto.getParticipanteReferente() == null
+                || dto.getParticipanteReferente().isBlank())
                 ? null
-                : exigirParticipante(catalogo, dto.participanteReferente(),
+                : exigirParticipante(catalogo, dto.getParticipanteReferente(),
                         "relacao.participante_referente");
-        ParticipanteNarrativo referido = (dto.participanteReferido() == null
-                || dto.participanteReferido().isBlank())
+        ParticipanteNarrativo referido = (dto.getParticipanteReferido() == null
+                || dto.getParticipanteReferido().isBlank())
                 ? null
-                : exigirParticipante(catalogo, dto.participanteReferido(),
+                : exigirParticipante(catalogo, dto.getParticipanteReferido(),
                         "relacao.participante_referido");
 
         Quantidade qReferente = (papeis != null && papeis.containsKey(PapelQuantitativo.REFERENTE.name()))
@@ -597,10 +597,10 @@ public final class MapeadorSituacao {
                         catalogo, "relacao.papeis.VALOR_RELATIVO")
                 : null;
 
-        ComparacaoQuantitativa.Direcao direcao = (dto.direcao() == null || dto.direcao().isBlank())
+        ComparacaoQuantitativa.Direcao direcao = (dto.getDirecao() == null || dto.getDirecao().isBlank())
                 ? ComparacaoQuantitativa.Direcao.A_MAIS
                 : lerEnumerado(ComparacaoQuantitativa.Direcao.class,
-                        dto.direcao(), "relacao.direcao");
+                        dto.getDirecao(), "relacao.direcao");
 
         construtor.comReferente(referente, qReferente);
         construtor.comReferido(referido, qReferido);
@@ -613,8 +613,8 @@ public final class MapeadorSituacao {
                                              CatalogoDaSituacao catalogo,
                                              String idRelacao) {
         ComposicaoParteTodo.Construtor construtor = ComposicaoParteTodo.construtor(idRelacao);
-        if (dto.partes() != null) {
-            for (QuantidadeDto parteDto : dto.partes()) {
+        if (dto.getPartes() != null) {
+            for (QuantidadeDto parteDto : dto.getPartes()) {
                 construtor.comParte(lerQuantidade(parteDto, catalogo, "relacao.partes"));
             }
         } else if (papeis != null && papeis.containsKey(PapelQuantitativo.PARTE.name())) {
@@ -622,7 +622,7 @@ public final class MapeadorSituacao {
                     papeis.get(PapelQuantitativo.PARTE.name()), catalogo, "relacao.papeis.PARTE"));
         }
 
-        QuantidadeDto todoDto = dto.todo();
+        QuantidadeDto todoDto = dto.getTodo();
         if (todoDto == null && papeis != null) {
             todoDto = papeis.get(PapelQuantitativo.TODO.name());
         }
@@ -644,12 +644,14 @@ public final class MapeadorSituacao {
                 ? "revisor registrado no arquivo"
                 : revisorGravado;
         if (StatusCuradoria.VALIDADA.name().equals(status)) {
-            return situacao.promoverParaValidada(revisor);
+            situacao.promoverParaValidada(revisor);
+            return situacao;
         }
         if (StatusCuradoria.RECUSADA.name().equals(status)) {
-            return situacao.recusar(revisor,
+            situacao.recusar(revisor,
                     motivoGravado == null || motivoGravado.isBlank()
                             ? "motivo registrado no arquivo" : motivoGravado);
+            return situacao;
         }
         throw new ErroDeLeituraJson("status desconhecido: " + status);
     }

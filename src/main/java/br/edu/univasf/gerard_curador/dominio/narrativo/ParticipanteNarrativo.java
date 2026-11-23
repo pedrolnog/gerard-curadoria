@@ -5,6 +5,9 @@ import java.util.Objects;
 /**
  * Identidade e nome de uma pessoa ou entidade da historia.
  *
+ * <p>Entidade mutavel por setters validados; o id nao muda (e a identidade
+ * usada em equals/hashCode).
+ *
  * <p>Responde a pergunta 6 da apresentacao final: o participante nao guarda
  * permanentemente o papel de destinatario. "Vovo" e uma identidade estavel; ser
  * ator ou destinataria e uma posicao que ela ocupa <em>em uma transformacao
@@ -22,8 +25,8 @@ import java.util.Objects;
 public final class ParticipanteNarrativo {
 
     private final String id;
-    private final String nomeExibido;
-    private final ReferenciaVisualParticipante referenciaVisual;
+    private String nomeExibido;
+    private ReferenciaVisualParticipante referenciaVisual;
 
     public ParticipanteNarrativo(String id, String nomeExibido) {
         this(id, nomeExibido, null);
@@ -32,15 +35,28 @@ public final class ParticipanteNarrativo {
     public ParticipanteNarrativo(String id,
                                  String nomeExibido,
                                  ReferenciaVisualParticipante referenciaVisual) {
+        this.id = validarId(id);
+        this.nomeExibido = validarNomeExibido(nomeExibido);
+        this.referenciaVisual = normalizarReferenciaVisual(referenciaVisual);
+    }
+
+    private static String validarId(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("participante exige id");
         }
+        return id;
+    }
+
+    private static String validarNomeExibido(String nomeExibido) {
         if (nomeExibido == null || nomeExibido.isBlank()) {
             throw new IllegalArgumentException("participante exige nome exibido");
         }
-        this.id = id;
-        this.nomeExibido = nomeExibido;
-        this.referenciaVisual = referenciaVisual == null
+        return nomeExibido;
+    }
+
+    private static ReferenciaVisualParticipante normalizarReferenciaVisual(
+            ReferenciaVisualParticipante referenciaVisual) {
+        return referenciaVisual == null
                 ? ReferenciaVisualParticipante.naoDefinida()
                 : referenciaVisual;
     }
@@ -53,8 +69,22 @@ public final class ParticipanteNarrativo {
         return nomeExibido;
     }
 
+    /**
+     * Altera o nome exibido do participante.
+     */
+    public void setNomeExibido(String nomeExibido) {
+        this.nomeExibido = validarNomeExibido(nomeExibido);
+    }
+
     public ReferenciaVisualParticipante getReferenciaVisual() {
         return referenciaVisual;
+    }
+
+    /**
+     * Altera a referencia visual do participante.
+     */
+    public void setReferenciaVisual(ReferenciaVisualParticipante referenciaVisual) {
+        this.referenciaVisual = normalizarReferenciaVisual(referenciaVisual);
     }
 
     /**

@@ -168,4 +168,50 @@ class ObjetoContadoTest {
         ObjetoContado o = new ObjetoContado("rosa_branca", familiaRosa, Set.of(), textoRosa, null);
         assertEquals("rosa_branca", o.toString());
     }
+
+    @Test
+    @DisplayName("setFamilia e setRealizacaoTextual rejeitam nulo com IllegalArgumentException e preservam o valor anterior")
+    void settersValidadosRejeitamNuloPreservandoEstadoAnterior() {
+        ObjetoContado objeto = new ObjetoContado("rosa_1", familiaRosa, Set.of(), textoRosa, null);
+
+        assertThrows(IllegalArgumentException.class, () -> objeto.setFamilia(null));
+        assertEquals(familiaRosa, objeto.getFamilia());
+
+        assertThrows(IllegalArgumentException.class, () -> objeto.setRealizacaoTextual(null));
+        assertEquals(textoRosa, objeto.getRealizacaoTextual());
+    }
+
+    @Test
+    @DisplayName("adicionarCaracteristica e removerCaracteristica alteram getCaracteristicas e mantêm conjunto não modificável")
+    void manipularCaracteristicasEImutabilidade() {
+        ObjetoContado objeto = new ObjetoContado("rosa_1", familiaRosa, Set.of(), textoRosa, null);
+        CaracteristicaObjeto cor = CaracteristicaObjeto.de("cor", "branca");
+
+        objeto.adicionarCaracteristica(cor);
+        assertTrue(objeto.getCaracteristicas().contains(cor));
+        assertEquals(1, objeto.getCaracteristicas().size());
+
+        assertThrows(UnsupportedOperationException.class, () ->
+                objeto.getCaracteristicas().add(CaracteristicaObjeto.de("cor", "amarela")));
+
+        objeto.removerCaracteristica(cor);
+        assertFalse(objeto.getCaracteristicas().contains(cor));
+        assertTrue(objeto.getCaracteristicas().isEmpty());
+    }
+
+    @Test
+    @DisplayName("setCaracteristicas faz cópia defensiva do conjunto recebido")
+    void setCaracteristicasFazCopiaDefensiva() {
+        ObjetoContado objeto = new ObjetoContado("rosa_1", familiaRosa, Set.of(), textoRosa, null);
+        CaracteristicaObjeto cor = CaracteristicaObjeto.de("cor", "branca");
+        Set<CaracteristicaObjeto> mutavel = new HashSet<>();
+        mutavel.add(cor);
+
+        objeto.setCaracteristicas(mutavel);
+        assertEquals(Set.of(cor), objeto.getCaracteristicas());
+
+        mutavel.add(CaracteristicaObjeto.de("tamanho", "grande"));
+        assertEquals(1, objeto.getCaracteristicas().size());
+        assertFalse(objeto.possuiCaracteristica(CaracteristicaObjeto.de("tamanho", "grande")));
+    }
 }

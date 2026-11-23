@@ -39,9 +39,9 @@ class MapeadorSituacaoTest {
 
         SituacaoDto dto = mapeador.paraDto(original);
         assertNotNull(dto);
-        assertEquals(original.getId(), dto.id());
-        assertEquals("COMPOSICAO_TRANSFORMACOES", dto.categoria());
-        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA.name(), dto.status());
+        assertEquals(original.getId(), dto.getId());
+        assertEquals("COMPOSICAO_TRANSFORMACOES", dto.getCategoria());
+        assertEquals(StatusCuradoria.CANDIDATA_NAO_CURADA.name(), dto.getStatus());
 
         SituacaoProblema recuperada = mapeador.paraDominio(dto);
         assertNotNull(recuperada);
@@ -75,19 +75,19 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoIdNulo = new SituacaoDto(
-                null, base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                null, base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoIdNulo));
 
         SituacaoDto dtoIdVazio = new SituacaoDto(
-                "   ", base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                "   ", base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoIdVazio));
     }
 
@@ -97,11 +97,11 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoEnunciadoVazio = new SituacaoDto(
-                base.id(), "  ", base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), "  ", base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoEnunciadoVazio));
     }
 
@@ -111,11 +111,11 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoSemParticipantes = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                null, base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                null, base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoSemParticipantes));
     }
 
@@ -125,11 +125,11 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoSemObjetos = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), null, base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), null, base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoSemObjetos));
     }
 
@@ -139,11 +139,11 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoSemEstadoInicial = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), "ADITIVO",
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), null, base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), "ADITIVO",
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), null, base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoSemEstadoInicial));
     }
 
@@ -151,17 +151,17 @@ class MapeadorSituacaoTest {
     @DisplayName("DTO com transformação referindo participante inexistente lança ErroDeLeituraJson")
     void dtoComTransformacaoReferindoParticipanteInexistenteLancaErroDeLeituraJson() {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
-        TransformacaoDto tOriginal = base.transformacoes().get(0);
+        TransformacaoDto tOriginal = base.getTransformacoes().get(0);
         TransformacaoDto tInvalida = new TransformacaoDto(
-                tOriginal.ordem(), tOriginal.marcador(), "participante_inexistente",
-                tOriginal.destinatario(), tOriginal.acao(), tOriginal.quantidade());
+                tOriginal.getOrdem(), tOriginal.getMarcador(), "participante_inexistente",
+                tOriginal.getDestinatario(), tOriginal.getAcao(), tOriginal.getQuantidade());
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), List.of(tInvalida),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), List.of(tInvalida),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -170,17 +170,17 @@ class MapeadorSituacaoTest {
     @DisplayName("DTO com transformação referindo destinatário inexistente lança ErroDeLeituraJson")
     void dtoComTransformacaoReferindoDestinatarioInexistenteLancaErroDeLeituraJson() {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
-        TransformacaoDto tOriginal = base.transformacoes().get(0);
+        TransformacaoDto tOriginal = base.getTransformacoes().get(0);
         TransformacaoDto tInvalida = new TransformacaoDto(
-                tOriginal.ordem(), tOriginal.marcador(), tOriginal.ator(),
-                "destinatario_inexistente", tOriginal.acao(), tOriginal.quantidade());
+                tOriginal.getOrdem(), tOriginal.getMarcador(), tOriginal.getAtor(),
+                "destinatario_inexistente", tOriginal.getAcao(), tOriginal.getQuantidade());
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), List.of(tInvalida),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), List.of(tInvalida),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -190,15 +190,15 @@ class MapeadorSituacaoTest {
     void dtoComEstadoInicialReferindoPossuidorInexistenteLancaErroDeLeituraJson() {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
         EstadoDto estadoInvalido = new EstadoDto(
-                "possuidor_fantasma", base.estadoInicial().ordemTemporal(),
-                base.estadoInicial().rotuloTemporal(), base.estadoInicial().itens());
+                "possuidor_fantasma", base.getEstadoInicial().getOrdemTemporal(),
+                base.getEstadoInicial().getRotuloTemporal(), base.getEstadoInicial().getItens());
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), estadoInvalido, base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), estadoInvalido, base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -210,15 +210,15 @@ class MapeadorSituacaoTest {
         QuantidadeDto itemInexistente = new QuantidadeDto(
                 "objeto_inexistente", 2, "DISCRETA", "UNIDADE");
         EstadoDto estadoInvalido = new EstadoDto(
-                base.estadoInicial().possuidor(), base.estadoInicial().ordemTemporal(),
-                base.estadoInicial().rotuloTemporal(), List.of(itemInexistente));
+                base.getEstadoInicial().getPossuidor(), base.getEstadoInicial().getOrdemTemporal(),
+                base.getEstadoInicial().getRotuloTemporal(), List.of(itemInexistente));
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), estadoInvalido, base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), estadoInvalido, base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -232,11 +232,11 @@ class MapeadorSituacaoTest {
                 null, null, null, null, null, null, null, null);
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), relacaoInvalida, base.ambiguidades(),
-                base.status(), base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), relacaoInvalida, base.getAmbiguidades(),
+                base.getStatus(), base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -247,11 +247,11 @@ class MapeadorSituacaoTest {
         SituacaoDto base = mapeador.paraDto(SituacoesParaPersistencia.situacaoRosasCompleta());
 
         SituacaoDto dtoInvalido = new SituacaoDto(
-                base.id(), base.enunciado(), base.categoria(), base.escopo(),
-                base.participantes(), base.objetosContados(), base.contexto(),
-                base.incognita(), base.estadoInicial(), base.transformacoes(),
-                base.estadoFinalCurado(), base.relacao(), base.ambiguidades(),
-                "STATUS_INVENTADO", base.revisor(), base.motivoRecusa());
+                base.getId(), base.getEnunciado(), base.getCategoria(), base.getEscopo(),
+                base.getParticipantes(), base.getObjetosContados(), base.getContexto(),
+                base.getIncognita(), base.getEstadoInicial(), base.getTransformacoes(),
+                base.getEstadoFinalCurado(), base.getRelacao(), base.getAmbiguidades(),
+                "STATUS_INVENTADO", base.getRevisor(), base.getMotivoRecusa());
 
         assertThrows(ErroDeLeituraJson.class, () -> mapeador.paraDominio(dtoInvalido));
     }
@@ -272,11 +272,11 @@ class MapeadorSituacaoTest {
     @Test
     @DisplayName("Preserva situação promovida para VALIDADA")
     void preservaSituacaoPromovidaParaValidada() {
-        SituacaoProblema promovida = SituacoesParaPersistencia.situacaoRosasCompleta()
-                .promoverParaValidada("Revisor Humano");
+        SituacaoProblema promovida = SituacoesParaPersistencia.situacaoRosasCompleta();
+        promovida.promoverParaValidada("Revisor Humano");
 
         SituacaoDto dto = mapeador.paraDto(promovida);
-        assertEquals(StatusCuradoria.VALIDADA.name(), dto.status());
+        assertEquals(StatusCuradoria.VALIDADA.name(), dto.getStatus());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertEquals(StatusCuradoria.VALIDADA, reconstruida.getStatus());
@@ -286,11 +286,11 @@ class MapeadorSituacaoTest {
     @Test
     @DisplayName("Preserva situação com status RECUSADA")
     void preservaSituacaoRecusada() {
-        SituacaoProblema recusada = SituacoesParaPersistencia.situacaoRosasCompleta()
-                .recusar("Revisor Humano", "Enunciado ambíguo demais");
+        SituacaoProblema recusada = SituacoesParaPersistencia.situacaoRosasCompleta();
+        recusada.recusar("Revisor Humano", "Enunciado ambíguo demais");
 
         SituacaoDto dto = mapeador.paraDto(recusada);
-        assertEquals(StatusCuradoria.RECUSADA.name(), dto.status());
+        assertEquals(StatusCuradoria.RECUSADA.name(), dto.getStatus());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertEquals(StatusCuradoria.RECUSADA, reconstruida.getStatus());
@@ -304,8 +304,8 @@ class MapeadorSituacaoTest {
         SituacaoProblema foraEscopo = SituacoesParaPersistencia.situacaoForaDoEscopo();
 
         SituacaoDto dto = mapeador.paraDto(foraEscopo);
-        assertEquals(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO.name(), dto.escopo());
-        assertNull(dto.estadoInicial());
+        assertEquals(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO.name(), dto.getEscopo());
+        assertNull(dto.getEstadoInicial());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertEquals(EscopoDaSituacao.FORA_DO_ESCOPO_ADITIVO, reconstruida.getEscopo());
@@ -318,8 +318,8 @@ class MapeadorSituacaoTest {
         SituacaoProblema ambigua = SituacoesParaPersistencia.situacaoComAmbiguidadeDeclarada();
 
         SituacaoDto dto = mapeador.paraDto(ambigua);
-        assertEquals(1, dto.ambiguidades().size());
-        assertEquals("deu 1 branca", dto.ambiguidades().get(0).trecho());
+        assertEquals(1, dto.getAmbiguidades().size());
+        assertEquals("deu 1 branca", dto.getAmbiguidades().get(0).getTrecho());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertEquals(1, reconstruida.getAmbiguidades().size());
@@ -345,7 +345,7 @@ class MapeadorSituacaoTest {
                 .construir();
 
         SituacaoDto dto = mapeador.paraDto(situacao);
-        assertEquals("COMPARACAO", dto.categoria());
+        assertEquals("COMPARACAO", dto.getCategoria());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertNotNull(reconstruida.getRelacaoEstrutural());
@@ -370,7 +370,7 @@ class MapeadorSituacaoTest {
                 .construir();
 
         SituacaoDto dto = mapeador.paraDto(situacao);
-        assertEquals("COMPOSICAO_PARTE_TODO", dto.categoria());
+        assertEquals("COMPOSICAO_PARTE_TODO", dto.getCategoria());
 
         SituacaoProblema reconstruida = mapeador.paraDominio(dto);
         assertNotNull(reconstruida.getRelacaoEstrutural());

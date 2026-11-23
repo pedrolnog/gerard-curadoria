@@ -42,18 +42,14 @@ class IncognitaQuantitativaTest {
         assertNull(incognita.getValorResolvido());
 
         Quantidade valorResolvido = rosa.contar(5);
-        IncognitaQuantitativa resolvida = incognita.resolver(valorResolvido);
+        incognita.resolver(valorResolvido);
 
-        // A versão resolvida preserva a designação do papel original
-        assertTrue(resolvida.estaResolvida());
-        assertEquals(PapelQuantitativo.ESTADO_INICIAL, resolvida.getPapelOriginal());
-        assertTrue(resolvida.designa(PapelQuantitativo.ESTADO_INICIAL));
-        assertEquals(valorResolvido, resolvida.getValorResolvido());
-        assertEquals("Quantas rosas a vovó tinha no início?", resolvida.getDescricaoDaPergunta());
-
-        // Imutabilidade: a instância original permanece intacta e não resolvida
-        assertFalse(incognita.estaResolvida());
-        assertNull(incognita.getValorResolvido());
+        // A própria incógnita resolvida preserva a designação do papel original
+        assertTrue(incognita.estaResolvida());
+        assertEquals(PapelQuantitativo.ESTADO_INICIAL, incognita.getPapelOriginal());
+        assertTrue(incognita.designa(PapelQuantitativo.ESTADO_INICIAL));
+        assertEquals(valorResolvido, incognita.getValorResolvido());
+        assertEquals("Quantas rosas a vovó tinha no início?", incognita.getDescricaoDaPergunta());
     }
 
     @Test
@@ -69,8 +65,8 @@ class IncognitaQuantitativaTest {
         assertEquals("Quantas rosas havia no início? [papel original: estado inicial]", incognita.descreverComPapel());
         assertEquals(incognita.descreverComPapel(), incognita.toString());
 
-        IncognitaQuantitativa resolvida = incognita.resolver(rosa.contar(5));
-        assertEquals("Quantas rosas havia no início? [papel original: estado inicial] = 5 rosas", resolvida.descreverComPapel());
+        incognita.resolver(rosa.contar(5));
+        assertEquals("Quantas rosas havia no início? [papel original: estado inicial] = 5 rosas", incognita.descreverComPapel());
     }
 
     @Test
@@ -80,9 +76,9 @@ class IncognitaQuantitativaTest {
                 PapelQuantitativo.ESTADO_INICIAL,
                 "Quantas rosas?"
         );
-        IncognitaQuantitativa resolvida = incognita.resolver(rosa.contar(5));
+        incognita.resolver(rosa.contar(5));
 
-        assertThrows(IllegalStateException.class, () -> resolvida.resolver(rosa.contar(5)));
+        assertThrows(IllegalStateException.class, () -> incognita.resolver(rosa.contar(5)));
     }
 
     @Test

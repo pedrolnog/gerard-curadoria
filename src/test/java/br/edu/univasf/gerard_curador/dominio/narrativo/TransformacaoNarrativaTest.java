@@ -199,4 +199,79 @@ class TransformacaoNarrativaTest {
         assertThrows(IllegalArgumentException.class, () ->
                 new TransformacaoNarrativa(vovo, deu, vovo, umaBranca, momentoPrimeiraDoacao));
     }
+
+    @Test
+    @DisplayName("setQuantidade altera a quantidade e rejeita nulo preservando o valor anterior")
+    void setQuantidadeAlteraERejeitaNulo() {
+        TransformacaoNarrativa trans = new TransformacaoNarrativa(
+                vovo, deu, netinha, umaBranca, momentoPrimeiraDoacao
+        );
+
+        trans.setQuantidade(umaAmarela);
+        assertEquals(umaAmarela, trans.getQuantidade());
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setQuantidade(null));
+        assertEquals(umaAmarela, trans.getQuantidade());
+    }
+
+    @Test
+    @DisplayName("setMarcador altera o marcador temporal e rejeita nulo preservando o valor anterior")
+    void setMarcadorAlteraERejeitaNulo() {
+        TransformacaoNarrativa trans = new TransformacaoNarrativa(
+                vovo, deu, netinha, umaBranca, momentoPrimeiraDoacao
+        );
+
+        trans.setMarcador(momentoSegundaDoacao);
+        assertEquals(momentoSegundaDoacao, trans.getMarcador());
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setMarcador(null));
+        assertEquals(momentoSegundaDoacao, trans.getMarcador());
+    }
+
+    @Test
+    @DisplayName("setDestinatario igual ao ator lança exceção e preserva o destinatário anterior")
+    void setDestinatarioIgualAoAtorLancaExcecao() {
+        TransformacaoNarrativa trans = new TransformacaoNarrativa(
+                vovo, deu, netinha, umaBranca, momentoPrimeiraDoacao
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setDestinatario(vovo));
+        assertEquals(netinha, trans.getDestinatario());
+    }
+
+    @Test
+    @DisplayName("setAtor igual ao destinatário atual lança exceção e preserva o ator anterior")
+    void setAtorIgualAoDestinatarioLancaExcecao() {
+        TransformacaoNarrativa trans = new TransformacaoNarrativa(
+                vovo, deu, netinha, umaBranca, momentoPrimeiraDoacao
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setAtor(netinha));
+        assertEquals(vovo, trans.getAtor());
+    }
+
+    @Test
+    @DisplayName("setAcao que exige destinatário em transformação sem destinatário lança exceção e preserva ação anterior")
+    void setAcaoQueExigeDestinatarioSemDestinatarioLancaExcecao() {
+        AcaoNarrativa comeu = AcaoNarrativa.semDestinatario(
+                "comer", "comeu", "comido", SentidoTransformacao.RETIRADA
+        );
+        TransformacaoNarrativa trans = TransformacaoNarrativa.semDestinatario(
+                vovo, comeu, umaBranca, momentoPrimeiraDoacao
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setAcao(deu));
+        assertEquals(comeu, trans.getAcao());
+    }
+
+    @Test
+    @DisplayName("setDestinatario nulo quando a ação exige destinatário lança exceção e preserva destinatário anterior")
+    void setDestinatarioNuloQuandoAcaoExigeLancaExcecao() {
+        TransformacaoNarrativa trans = new TransformacaoNarrativa(
+                vovo, deu, netinha, umaBranca, momentoPrimeiraDoacao
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> trans.setDestinatario(null));
+        assertEquals(netinha, trans.getDestinatario());
+    }
 }

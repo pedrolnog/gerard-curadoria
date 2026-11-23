@@ -46,7 +46,7 @@ dominio
 └── repositorio           interface genérica Repositorio<T, ID>
 representacao.quadrinhos  quadros, balões e renderizadores de roteiro
 persistencia              repositório JSON, mapeador e erros de leitura
-└── dto                   records usados na serialização
+└── dto                   DTOs (getters/setters) usados na serialização
 interfacegrafica          tela JavaFX e lógica de rascunho
 ```
 

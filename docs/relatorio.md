@@ -20,7 +20,11 @@ A retirada de uma quantidade inexistente é recusada por `Inventario`, e não pe
 
 ## 3. Conceitos de POO aplicados
 
-**Encapsulamento e invariantes.** `Numero`, `Quantidade`, `Inventario`, `EstadoDePosse` e `SituacaoProblema` são imutáveis. Não têm setters, validam no construtor e devolvem novas instâncias a cada operação. Depois de aplicar as transformações, o estado inicial continua íntegro.
+**Encapsulamento e invariantes.** Os atributos são todos privados e o acesso é por getters e setters. As entidades (`SituacaoProblema`, `ParticipanteNarrativo`, `ObjetoContado`, `AcaoNarrativa`, `TransformacaoNarrativa`, `ContextoNarrativo`, `CatalogoDaSituacao`, `IncognitaQuantitativa` etc.) podem ser alteradas depois de criadas, mas cada setter aplica a mesma validação do construtor: um valor inválido lança exceção e o objeto continua como estava. Regras que envolvem dois atributos também valem no setter (por exemplo, `setDestinatario` recusa o próprio ator). Coleções são alteradas por `adicionarX`/`removerX` e expostas só para leitura.
+
+Alguns atributos ficam de propósito sem setter público: o `id` (é a identidade usada em `equals`/`hashCode`) e o status da curadoria, que só muda por `promoverParaValidada` e `recusar`, porque essas operações têm regras próprias. Qualquer alteração de conteúdo em uma situação já revisada a devolve para `CANDIDATA_NAO_CURADA`, já que o conteúdo mudou depois da revisão humana.
+
+Os objetos de valor (`Numero`, `Quantidade`, `Inventario`, `EstadoDePosse`, `MarcadorTemporal`, `CaracteristicaObjeto`) continuam imutáveis, como `String` e `Integer`. Um `EstadoDePosse` é a fotografia de um momento da história: aplicar uma transformação gera o estado seguinte sem apagar o anterior, e é isso que permite mostrar o percurso de estados.
 
 **Abstração.** `RelacaoEstrutural` (classe abstrata) define o contrato de uma relação aditiva. `Repositorio<T, ID>` e `RenderizadorDeRoteiro` abstraem persistência e representação.
 
@@ -38,7 +42,7 @@ A retirada de uma quantidade inexistente é recusada por `Inventario`, e não pe
 
 ## 4. Separação domínio / JSON / representação
 
-O domínio define a interface `Repositorio<T, ID>` (inversão de dependência). `persistencia` a implementa em `RepositorioSituacaoJson`, que usa Gson, DTOs em `records` (`persistencia.dto`) e `MapeadorSituacao`. `representacao.quadrinhos` transforma a `SequenciaNarrativa` em quadros, balões e roteiros (`GeradorRoteiroQuadrinhos`, `Quadro`, `Balao`, `DescritorCena`, `RoteiroQuadrinhos`). O domínio não conhece JSON nem quadrinhos, e a `SituacaoProblema` produz uma sequência sem desenhar nada.
+O domínio define a interface `Repositorio<T, ID>` (inversão de dependência). `persistencia` a implementa em `RepositorioSituacaoJson`, que usa Gson, DTOs anêmicos com getters e setters (`persistencia.dto`) e `MapeadorSituacao`. `representacao.quadrinhos` transforma a `SequenciaNarrativa` em quadros, balões e roteiros (`GeradorRoteiroQuadrinhos`, `Quadro`, `Balao`, `DescritorCena`, `RoteiroQuadrinhos`). O domínio não conhece JSON nem quadrinhos, e a `SituacaoProblema` produz uma sequência sem desenhar nada.
 
 ## 5. Generalização para as três situações
 

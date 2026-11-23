@@ -5,6 +5,9 @@ import java.util.Objects;
 /**
  * Significado curado da acao, seus participantes e efeitos nos estados envolvidos.
  *
+ * <p>Entidade mutavel por setters validados; o id nao muda (e a identidade
+ * usada em equals/hashCode).
+ *
  * <p>A especificacao e explicita: AcaoNarrativa nao deve ser somente o verbo
  * exibido. Um verbo solto ("deu") nao diz se alguem recebe o que foi dado, nem
  * qual o efeito sobre quem possuia. Esta classe carrega esse significado:
@@ -36,11 +39,11 @@ public final class AcaoNarrativa {
     private static final String PREPOSICAO_ORIGEM = "de";
 
     private final String id;
-    private final String verbo;
-    private final String participio;
-    private final SentidoTransformacao sentido;
-    private final boolean exigeDestinatario;
-    private final String preposicaoDoDestinatario;
+    private String verbo;
+    private String participio;
+    private SentidoTransformacao sentido;
+    private boolean exigeDestinatario;
+    private String preposicaoDoDestinatario;
 
     public AcaoNarrativa(String id,
                          String verbo,
@@ -57,27 +60,47 @@ public final class AcaoNarrativa {
                          SentidoTransformacao sentido,
                          boolean exigeDestinatario,
                          String preposicaoDoDestinatario) {
+        this.id = validarId(id);
+        this.verbo = validarVerbo(verbo);
+        this.participio = validarParticipio(participio);
+        this.sentido = validarSentido(sentido);
+        this.exigeDestinatario = exigeDestinatario;
+        this.preposicaoDoDestinatario = validarPreposicaoDoDestinatario(preposicaoDoDestinatario);
+    }
+
+    private static String validarId(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("acao exige id");
         }
+        return id;
+    }
+
+    private static String validarVerbo(String verbo) {
         if (verbo == null || verbo.isBlank()) {
             throw new IllegalArgumentException("acao exige verbo curado");
         }
+        return verbo;
+    }
+
+    private static String validarParticipio(String participio) {
         if (participio == null || participio.isBlank()) {
             throw new IllegalArgumentException("acao exige participio curado");
         }
+        return participio;
+    }
+
+    private static SentidoTransformacao validarSentido(SentidoTransformacao sentido) {
         if (sentido == null) {
             throw new IllegalArgumentException("acao exige sentido");
         }
+        return sentido;
+    }
+
+    private static String validarPreposicaoDoDestinatario(String preposicaoDoDestinatario) {
         if (preposicaoDoDestinatario == null || preposicaoDoDestinatario.isBlank()) {
             throw new IllegalArgumentException("acao exige preposicao do destinatario");
         }
-        this.id = id;
-        this.verbo = verbo;
-        this.participio = participio;
-        this.sentido = sentido;
-        this.exigeDestinatario = exigeDestinatario;
-        this.preposicaoDoDestinatario = preposicaoDoDestinatario;
+        return preposicaoDoDestinatario;
     }
 
     /**
@@ -127,16 +150,44 @@ public final class AcaoNarrativa {
         return verbo;
     }
 
+    /**
+     * Altera a forma do verbo.
+     */
+    public void setVerbo(String verbo) {
+        this.verbo = validarVerbo(verbo);
+    }
+
     public String getParticipio() {
         return participio;
+    }
+
+    /**
+     * Altera a forma do participio.
+     */
+    public void setParticipio(String participio) {
+        this.participio = validarParticipio(participio);
     }
 
     public SentidoTransformacao getSentido() {
         return sentido;
     }
 
+    /**
+     * Altera o sentido da acao.
+     */
+    public void setSentido(SentidoTransformacao sentido) {
+        this.sentido = validarSentido(sentido);
+    }
+
     public boolean exigeDestinatario() {
         return exigeDestinatario;
+    }
+
+    /**
+     * Define se a acao exige destinatario.
+     */
+    public void setExigeDestinatario(boolean exigeDestinatario) {
+        this.exigeDestinatario = exigeDestinatario;
     }
 
     /**
@@ -149,6 +200,13 @@ public final class AcaoNarrativa {
      */
     public String getPreposicaoDoDestinatario() {
         return preposicaoDoDestinatario;
+    }
+
+    /**
+     * Altera a preposicao que liga o verbo ao destinatario.
+     */
+    public void setPreposicaoDoDestinatario(String preposicaoDoDestinatario) {
+        this.preposicaoDoDestinatario = validarPreposicaoDoDestinatario(preposicaoDoDestinatario);
     }
 
     public boolean ehTransferencia() {
