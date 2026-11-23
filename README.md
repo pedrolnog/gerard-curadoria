@@ -24,7 +24,7 @@ A tela lê e grava as situações na pasta `dados/`, que vem junto no `.zip`. Ro
 ### Comandos
 
 ```
-mvn test            # 314 testes automatizados
+mvn test            # 335 testes automatizados
 mvn exec:java       # demonstração no console
 mvn javafx:run      # interface gráfica
 mvn package         # gera target/curador-historias-aditivas.jar (executável, com JavaFX embutido)
