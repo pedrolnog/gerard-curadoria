@@ -530,15 +530,15 @@ public final class CuradoriaController {
             if (resposta.isEmpty()) {
                 return;
             }
-            SituacaoProblema promovida = alvo.promoverParaValidada(resposta.get().trim());
-            repositorio.salvar(promovida);
-            situacaoAtual = promovida;
+            alvo.promoverParaValidada(resposta.get().trim());
+            repositorio.salvar(alvo);
+            situacaoAtual = alvo;
             rascunhoModificado = false;
-            recarregarListaESelecionar(promovida.getId());
-            apresentarValidacaoERoteiro(promovida);
+            recarregarListaESelecionar(alvo.getId());
+            apresentarValidacaoERoteiro(alvo);
             atualizarBarraStatus(
-                    "Situação '" + promovida.getId() + "' promovida para validada.",
-                    promovida);
+                    "Situação '" + alvo.getId() + "' promovida para validada.",
+                    alvo);
         } catch (RuntimeException erro) {
             registrarErro("Promoção recusada pelo domínio", erro);
         }
@@ -567,16 +567,15 @@ public final class CuradoriaController {
                 return;
             }
 
-            SituacaoProblema recusada = alvo.recusar(
-                    respRevisor.get().trim(), respMotivo.get().trim());
-            repositorio.salvar(recusada);
-            situacaoAtual = recusada;
+            alvo.recusar(respRevisor.get().trim(), respMotivo.get().trim());
+            repositorio.salvar(alvo);
+            situacaoAtual = alvo;
             rascunhoModificado = false;
-            recarregarListaESelecionar(recusada.getId());
-            apresentarValidacaoERoteiro(recusada);
+            recarregarListaESelecionar(alvo.getId());
+            apresentarValidacaoERoteiro(alvo);
             atualizarBarraStatus(
-                    "Situação '" + recusada.getId() + "' recusada.",
-                    recusada);
+                    "Situação '" + alvo.getId() + "' recusada.",
+                    alvo);
         } catch (RuntimeException erro) {
             registrarErro("Recusa rejeitada pelo domínio", erro);
         }

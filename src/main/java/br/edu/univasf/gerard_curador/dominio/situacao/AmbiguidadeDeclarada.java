@@ -11,26 +11,46 @@ import java.util.Objects;
  */
 public final class AmbiguidadeDeclarada {
 
-    private final String trecho;
-    private final String motivo;
+    private String trecho;
+    private String motivo;
 
     public AmbiguidadeDeclarada(String trecho, String motivo) {
+        validarTrecho(trecho);
+        validarMotivo(motivo);
+        this.trecho = trecho;
+        this.motivo = motivo;
+    }
+
+    private static void validarTrecho(String trecho) {
         if (trecho == null || trecho.isBlank()) {
             throw new IllegalArgumentException("ambiguidade exige o trecho do enunciado");
         }
+    }
+
+    private static void validarMotivo(String motivo) {
         if (motivo == null || motivo.isBlank()) {
             throw new IllegalArgumentException("ambiguidade exige o motivo");
         }
-        this.trecho = trecho;
-        this.motivo = motivo;
     }
 
     public String getTrecho() {
         return trecho;
     }
 
+    /** Define o trecho do enunciado com ambiguidade. */
+    public void setTrecho(String trecho) {
+        validarTrecho(trecho);
+        this.trecho = trecho;
+    }
+
     public String getMotivo() {
         return motivo;
+    }
+
+    /** Define o motivo da ambiguidade. */
+    public void setMotivo(String motivo) {
+        validarMotivo(motivo);
+        this.motivo = motivo;
     }
 
     public String descrever() {

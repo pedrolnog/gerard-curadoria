@@ -404,7 +404,7 @@ public final class MapeadorSituacao {
             String idObjeto = exigirTexto(dto.objetoResolvido(), "incognita.objeto_resolvido");
             ObjetoContado objeto = exigirObjeto(catalogo, idObjeto, "incognita.objeto_resolvido");
             Integer valor = exigirInteiro(dto.valorResolvido(), "incognita.valor_resolvido");
-            incognita = incognita.resolver(objeto.contar(valor));
+            incognita.resolver(objeto.contar(valor));
         }
         return incognita;
     }
@@ -644,12 +644,14 @@ public final class MapeadorSituacao {
                 ? "revisor registrado no arquivo"
                 : revisorGravado;
         if (StatusCuradoria.VALIDADA.name().equals(status)) {
-            return situacao.promoverParaValidada(revisor);
+            situacao.promoverParaValidada(revisor);
+            return situacao;
         }
         if (StatusCuradoria.RECUSADA.name().equals(status)) {
-            return situacao.recusar(revisor,
+            situacao.recusar(revisor,
                     motivoGravado == null || motivoGravado.isBlank()
                             ? "motivo registrado no arquivo" : motivoGravado);
+            return situacao;
         }
         throw new ErroDeLeituraJson("status desconhecido: " + status);
     }

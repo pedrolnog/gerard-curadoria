@@ -17,31 +17,39 @@ import br.edu.univasf.gerard_curador.dominio.quantitativo.Quantidade;
  * todos sejam a pergunta feita ao aluno.
  *
  * <p>Por isso a incognita e uma designacao explicita, informada pelo curador, que
- * permanece apos receber um valor. O metodo {@link #resolver} devolve uma nova
- * incognita que continua sabendo qual papel era desconhecido, agora com a
+ * permanece apos receber um valor. O metodo {@link #resolver} altera a propria
+ * incognita, que continua sabendo qual papel era desconhecido, agora com a
  * resposta anexada (criterios "a incognita original permanece identificada apos
  * receber um valor" e caso de teste 13).
  *
- * <p>Imutavel: resolver nao apaga a designacao, cria uma versao resolvida dela.
+ * <p>Mutavel: resolver altera o proprio objeto preservando a designacao original.
  */
 public final class IncognitaQuantitativa {
 
-    private final PapelQuantitativo papelOriginal;
-    private final String descricaoDaPergunta;
-    private final Quantidade valorResolvido;
+    private PapelQuantitativo papelOriginal;
+    private String descricaoDaPergunta;
+    private Quantidade valorResolvido;
 
     private IncognitaQuantitativa(PapelQuantitativo papelOriginal,
                                   String descricaoDaPergunta,
                                   Quantidade valorResolvido) {
-        if (papelOriginal == null) {
-            throw new IllegalArgumentException("incognita exige papel original designado");
-        }
-        if (descricaoDaPergunta == null || descricaoDaPergunta.isBlank()) {
-            throw new IllegalArgumentException("incognita exige descricao da pergunta curada");
-        }
+        validarPapelOriginal(papelOriginal);
+        validarDescricaoDaPergunta(descricaoDaPergunta);
         this.papelOriginal = papelOriginal;
         this.descricaoDaPergunta = descricaoDaPergunta;
         this.valorResolvido = valorResolvido;
+    }
+
+    private static void validarPapelOriginal(PapelQuantitativo papelOriginal) {
+        if (papelOriginal == null) {
+            throw new IllegalArgumentException("incognita exige papel original designado");
+        }
+    }
+
+    private static void validarDescricaoDaPergunta(String descricaoDaPergunta) {
+        if (descricaoDaPergunta == null || descricaoDaPergunta.isBlank()) {
+            throw new IllegalArgumentException("incognita exige descricao da pergunta curada");
+        }
     }
 
     /** Designa a incognita antes de qualquer resolucao. */
@@ -54,8 +62,23 @@ public final class IncognitaQuantitativa {
         return papelOriginal;
     }
 
+    /** Define o papel quantitativo original. */
+    public void setPapelOriginal(PapelQuantitativo papelOriginal) {
+        if (estaResolvida()) {
+            throw new IllegalStateException("incognita ja resolvida nao pode trocar de papel");
+        }
+        validarPapelOriginal(papelOriginal);
+        this.papelOriginal = papelOriginal;
+    }
+
     public String getDescricaoDaPergunta() {
         return descricaoDaPergunta;
+    }
+
+    /** Define a descricao da pergunta curada. */
+    public void setDescricaoDaPergunta(String descricaoDaPergunta) {
+        validarDescricaoDaPergunta(descricaoDaPergunta);
+        this.descricaoDaPergunta = descricaoDaPergunta;
     }
 
     public Quantidade getValorResolvido() {
@@ -67,12 +90,12 @@ public final class IncognitaQuantitativa {
     }
 
     /**
-     * Anexa a resposta preservando a designacao original.
+     * Anexa a resposta alterando o proprio objeto e preservando a designacao original.
      *
      * <p>O papel continua sendo consultavel depois disso: e exatamente o ponto
      * da classe.
      */
-    public IncognitaQuantitativa resolver(Quantidade valor) {
+    public void resolver(Quantidade valor) {
         if (valor == null) {
             throw new IllegalArgumentException("resolucao exige quantidade");
         }
@@ -80,7 +103,7 @@ public final class IncognitaQuantitativa {
             throw new IllegalStateException(
                     "incognita de " + papelOriginal.getNomeExibido() + " ja foi resolvida");
         }
-        return new IncognitaQuantitativa(papelOriginal, descricaoDaPergunta, valor);
+        this.valorResolvido = valor;
     }
 
     /** Verdadeiro quando o papel consultado e o que foi originalmente desconhecido. */

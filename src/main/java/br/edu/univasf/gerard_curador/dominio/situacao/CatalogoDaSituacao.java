@@ -4,7 +4,6 @@ import br.edu.univasf.gerard_curador.dominio.narrativo.ParticipanteNarrativo;
 import br.edu.univasf.gerard_curador.dominio.quantitativo.FamiliaObjeto;
 import br.edu.univasf.gerard_curador.dominio.quantitativo.ObjetoContado;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,29 @@ public final class CatalogoDaSituacao {
 
     private CatalogoDaSituacao(Map<String, ParticipanteNarrativo> participantes,
                                Map<String, ObjetoContado> objetos) {
-        this.participantes = Collections.unmodifiableMap(participantes);
-        this.objetos = Collections.unmodifiableMap(objetos);
+        this.participantes = new LinkedHashMap<>(participantes);
+        this.objetos = new LinkedHashMap<>(objetos);
+    }
+
+    private static void validarNovoParticipante(Map<String, ParticipanteNarrativo> participantes,
+                                               ParticipanteNarrativo participante) {
+        if (participante == null) {
+            throw new IllegalArgumentException("catalogo nao aceita participante nulo");
+        }
+        if (participantes.containsKey(participante.getId())) {
+            throw new IllegalArgumentException(
+                    "participante ja cadastrado: " + participante.getId());
+        }
+    }
+
+    private static void validarNovoObjeto(Map<String, ObjetoContado> objetos,
+                                         ObjetoContado objeto) {
+        if (objeto == null) {
+            throw new IllegalArgumentException("catalogo nao aceita objeto nulo");
+        }
+        if (objetos.containsKey(objeto.getId())) {
+            throw new IllegalArgumentException("objeto ja cadastrado: " + objeto.getId());
+        }
     }
 
     public static Construtor construtor() {
@@ -58,8 +78,42 @@ public final class CatalogoDaSituacao {
         return new ArrayList<>(participantes.values());
     }
 
+    /** Adiciona um participante ao catalogo. */
+    public void adicionarParticipante(ParticipanteNarrativo participante) {
+        validarNovoParticipante(participantes, participante);
+        participantes.put(participante.getId(), participante);
+    }
+
+    /** Remove um participante do catalogo. */
+    public void removerParticipante(ParticipanteNarrativo participante) {
+        if (participante == null) {
+            throw new IllegalArgumentException("catalogo nao aceita participante nulo");
+        }
+        if (!participantes.containsKey(participante.getId())) {
+            throw new IllegalArgumentException("participante nao esta no catalogo: " + participante.getId());
+        }
+        participantes.remove(participante.getId());
+    }
+
     public List<ObjetoContado> getObjetos() {
         return new ArrayList<>(objetos.values());
+    }
+
+    /** Adiciona um objeto contado ao catalogo. */
+    public void adicionarObjeto(ObjetoContado objeto) {
+        validarNovoObjeto(objetos, objeto);
+        objetos.put(objeto.getId(), objeto);
+    }
+
+    /** Remove um objeto contado do catalogo. */
+    public void removerObjeto(ObjetoContado objeto) {
+        if (objeto == null) {
+            throw new IllegalArgumentException("catalogo nao aceita objeto nulo");
+        }
+        if (!objetos.containsKey(objeto.getId())) {
+            throw new IllegalArgumentException("objeto nao esta no catalogo: " + objeto.getId());
+        }
+        objetos.remove(objeto.getId());
     }
 
     /** Objetos de uma familia, para as totalizacoes por familia. */
@@ -93,24 +147,13 @@ public final class CatalogoDaSituacao {
         }
 
         public Construtor comParticipante(ParticipanteNarrativo participante) {
-            if (participante == null) {
-                throw new IllegalArgumentException("catalogo nao aceita participante nulo");
-            }
-            if (participantes.containsKey(participante.getId())) {
-                throw new IllegalArgumentException(
-                        "participante ja cadastrado: " + participante.getId());
-            }
+            validarNovoParticipante(participantes, participante);
             participantes.put(participante.getId(), participante);
             return this;
         }
 
         public Construtor comObjeto(ObjetoContado objeto) {
-            if (objeto == null) {
-                throw new IllegalArgumentException("catalogo nao aceita objeto nulo");
-            }
-            if (objetos.containsKey(objeto.getId())) {
-                throw new IllegalArgumentException("objeto ja cadastrado: " + objeto.getId());
-            }
+            validarNovoObjeto(objetos, objeto);
             objetos.put(objeto.getId(), objeto);
             return this;
         }
